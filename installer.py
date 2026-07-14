@@ -188,6 +188,9 @@ def conf():
 
 
 def main():
+    print("Welcome to PicoOS installer!")
+    print("Follow the intructions")
+    print("Good luck!")
     install_micropython()
     copy_files()
     conf()
