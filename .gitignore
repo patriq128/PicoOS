@@ -1,0 +1,5 @@
+*.uf2
+.micropico
+main.py.copy
+.vscode/
+conf/

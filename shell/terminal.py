@@ -9,6 +9,7 @@ from shell.commands import echo, hello, clean, exit, cd, python, mkdir, ls, rm, 
 from drivers.sdcard_driver import mount, unmount
 from kernel.config import enable, disable
 from system.apps import install
+from kernel.system import system
 
 def command_list():
     return {
@@ -28,7 +29,8 @@ def command_list():
         "unmount": unmount,
         "install": install,
         "disable": disable,
-        "enable": enable
+        "enable": enable,
+        "sysinfo": system
     }
 
 def terminal():
