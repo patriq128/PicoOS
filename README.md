@@ -2,6 +2,8 @@
 
 A lightweight, terminal-based operating environment for the Raspberry Pi Pico family, written in MicroPython. PicoOS boots into a colored shell with a small set of built-in commands, a simple app system, SD card support, and a PC-side installer that flashes MicroPython and deploys the whole project to the board in one step.
 
+[![Website](https://img.shields.io/badge/Website-picoos.dev-blue?style=for-the-badge)](https://picoos.dev)
+
 ## Features
 
 - **Interactive shell** – a command-line REPL with built-in file, directory, and system commands
