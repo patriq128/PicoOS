@@ -201,6 +201,10 @@ def main():
     copy_files()
     conf()
     print("Everything done!")
-
+    print("Rebooting system...")
+    subprocess.run(["mpremote", "reset"])
+    time.sleep(2)
+    print("Opening serial monitor...")
+    subprocess.run(["mpremote", "repl"])
 if __name__ == "__main__":
     main()
