@@ -5,6 +5,7 @@ import psutil
 import time
 import requests
 import json
+import sys
 
 def pico_exists(path):
     result = subprocess.run(
@@ -194,17 +195,27 @@ def conf():
 
 
 def main():
-    print("Welcome to PicoOS installer!")
-    print("Follow the intructions")
-    print("Good luck!")
-    install_micropython()
-    copy_files()
-    conf()
-    print("Everything done!")
-    print("Rebooting system...")
-    subprocess.run(["mpremote", "reset"])
-    time.sleep(2)
-    print("Opening serial monitor...")
-    subprocess.run(["mpremote", "repl"])
+    if "--monitor" in sys.argv:
+        print("Rebooting system...")
+        subprocess.run(["mpremote", "reset"])
+        time.sleep(2)
+        print("Opening serial monitor...")
+        subprocess.run(["mpremote", "repl"])
+    elif "--update" in sys.argv:
+        print("Updating system...")
+        copy_files()
+    else:
+        print("Welcome to PicoOS installer!")
+        print("Follow the intructions")
+        print("Good luck!")
+        install_micropython()
+        copy_files()
+        conf()
+        print("Everything done!")
+        print("Rebooting system...")
+        subprocess.run(["mpremote", "reset"])
+        time.sleep(2)
+        print("Opening serial monitor...")
+        subprocess.run(["mpremote", "repl"])
 if __name__ == "__main__":
     main()
