@@ -69,6 +69,22 @@ The installer runs on your computer and talks to the Pico over USB via [`mpremot
 
 On boot, MicroPython automatically runs `main.py`, which hands off to `kernel/boot.py`.
 
+## Installer details
+
+`installer.py` has three modes, selected by command-line flag:
+
+| Command | Behavior |
+|---|---|
+| `python installer.py` | Full setup: flash MicroPython, copy all project files, run the configuration wizard, then reset the board and open a serial monitor |
+| `python installer.py --update` | Re-copy `kernel/`, `shell/`, `system/`, `drivers/`, `apps/`, and `main.py` without reflashing MicroPython or reconfiguring |
+| `python installer.py --monitor` | Reset the board and open a serial monitor (`mpremote repl`) without copying anything |
+
+### What each step does
+
+- **`install_micropython()`** – prompts for a board type, downloads the matching `.uf2` from `micropython.org`, waits for the Pico to appear in BOOTSEL mode (detected via `psutil.disk_partitions()`), and copies the `.uf2` to it. Entering `*` skips this step if MicroPython is already installed.
+- **`copy_files()`** – creates `/apps`, `/drivers`, `kernel`, `/shell`, `/system`, and `/conf` on the board over `mpremote`, then copies each project folder and `main.py`. It also writes a default `conf/apps.conf` entry registering the bundled `nano` app.
+- **`conf()`** – the configuration wizard. Prompts for the status light type/pin (writes `conf/debug_light.conf`), SD card pins (writes `conf/sd_card.conf`), and whether to enable debug logging (writes `conf/configuration.conf`). Pressing Enter at any prompt skips that file, leaving PicoOS to fall back on its built-in defaults. Any files written are copied to the board's `/conf` at the end.
+
 ## Boot sequence
 
 1. Clear the screen and print the startup logo.
