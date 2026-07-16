@@ -4,13 +4,14 @@ from shell.commands import touch, rm, mv
 from kernel.colors import colors
 from kernel.debug import debug
 
+
 class Apps:
 
     def load(self):
         try:
             with open("/conf/apps.conf", "r") as f:
-               return json.load(f)
-        except:
+                return json.load(f)
+        except Exception:
             touch("/conf/apps.conf")
             return {}
 
@@ -22,13 +23,11 @@ class Apps:
             json.dump(data, f)
 
     def run(self, app, arg1):
-
         try:
             actualpath = os.getcwd()
             module_name = "apps." + app
 
             mod = __import__(module_name)
-                
             for part in module_name.split(".")[1:]:
                 mod = getattr(mod, part)
 
@@ -40,8 +39,10 @@ class Apps:
             print("Error loading app:", e)
             debug.error("Error loading app", str(e))
             print("called error")
-            
+
+
 apps = Apps()
+
 
 def install(app):
     try:
@@ -55,21 +56,26 @@ def install(app):
         }
 
         saved = apps.load()
-        exists = False
-        if app in saved:
-            exists = True
-            if float(saved[app]["Version"]) < float(data[app]["Version"]):
-                print("Are you sure you want to upgrade \033[32m" + app + " \033[0mfrom version \033[31m" + saved[app]["Version"] + "\033[0mto version \033[34m" + data[app]["Version"] + "\033[0m ?")
+        exists = app in saved
 
-            if float(saved[app]["Version"]) == float(data[app]["Version"]):
+        if exists:
+            old_v = float(saved[app]["Version"])
+            new_v = float(data[app]["Version"])
+
+            if old_v < new_v:
+                print("Are you sure you want to upgrade \033[32m" + app +
+                      " \033[0mfrom version \033[31m" + saved[app]["Version"] +
+                      "\033[0mto version \033[34m" + data[app]["Version"] + "\033[0m ?")
+            elif old_v == new_v:
                 print("App already newest version")
-
-            if float(saved[app]["Version"]) > float(data[app]["Version"]):
-                print("Are you sure you want to downgrade \033[32m" + app + " \033[0mfrom version \033[31m" + saved[app]["Version"] + "\033[0mto version \033[34m" + data[app]["Version"] + "\033[0m ?")
-        
-            question = input("Type [\033[32my\033[0m/\033[31mn \033[0m] >> ")
+                return
+            else:
+                print("Are you sure you want to downgrade \033[32m" + app +
+                      " \033[0mfrom version \033[31m" + saved[app]["Version"] +
+                      "\033[0mto version \033[34m" + data[app]["Version"] + "\033[0m ?")
         else:
             print("Are you sure you want to install \033[32m" + app + " \033[0m?")
+        question = input("Type [\033[32my\033[0m/\033[31mn \033[0m] >> ")
 
         if question == "y":
             apps.save(data)

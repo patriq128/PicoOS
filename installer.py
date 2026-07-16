@@ -135,6 +135,12 @@ def copy_files():
     print("Installing main ...")
     subprocess.run(["mpremote", "cp", "main.py", ":"])
 
+    print("Installing nano...")
+    data = {"nano": {"Autor": "ZiDi", "Version": "1.1"}}
+    os.makedirs("conf", exist_ok=True)
+    with open("conf/apps.conf", "w") as f:
+        json.dump(data, f)
+
     print("Configuration time...")
     print("* Press enter for setup default")
 
