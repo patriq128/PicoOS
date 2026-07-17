@@ -15,7 +15,7 @@ Terminal-based operating system fully written in MicroPython for the Raspberry P
   I tried to make it as similar as possible to the original Nano editor. With this, you can easily edit your configuration, write or edit programs locally, and do anything you need with text files.
 
 * **Similarity with Linux**
-  I tried to make it feel very similar to Linux, so some of the commands are the same. You can learn Linux while using it.
+  I tried to make it feel very similar to Linux, so some of the commands are the same.
 
 * **Debugging**
   Debugging this whole system was a pain, so I made several debugging tools:
@@ -193,3 +193,6 @@ This is the beta version of PicoOS, and it only contains some of the features I 
 
 * **Image rendering**
   This may sound like a crazy idea, but I want to create something that can render regular image formats into colored ASCII art so they can be displayed inside the terminal. This could even make it possible to view images from the internet, play videos (which are just lots of images in sequence), or maybe even run simple games like DOOM.
+
+## Why I made this
+I got the idea for this project one day when I wanted to try installing Linux on the RP2040, but hey, it's not possible because of the small amount of RAM and flash memory. So I said to myself, "Why not make my own OS for the Raspberry Pi Pico?" And that's how the project started.
