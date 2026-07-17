@@ -1,165 +1,82 @@
 # PicoOS
 
-A lightweight, terminal-based operating environment for the Raspberry Pi Pico family, written in MicroPython. PicoOS boots into a colored shell with a small set of built-in commands, a simple app system, SD card support, and a PC-side installer that flashes MicroPython and deploys the whole project to the board in one step.
+Terminal-based operating system fully written in MicroPython for Raspberry pi pico family.
 
 [![Website](https://img.shields.io/badge/Website-picoos.dev-pink?style=for-the-badge)](https://picoos.dev)
-> Note: The installer has only been tested on Linux. Windows and macOS support is expected but not yet verified.
+
+> Note: The installer has only been tested on Linux. Windows and macOS support is expected but not yet verified. (Please report issuses if you find them)
+
 ## Features
-
-- **Interactive shell** – a command-line REPL with built-in file, directory, and system commands
-- **App system** – drop a `.py` file with an `install()` and `main()` function into the project and load it as a shell command
-- **SD card support** – mount/unmount an SD card over SPI, with configurable pins
-- **Status light** – a configurable LED or NeoPixel used as a boot/error indicator
-- **Persistent configuration** – JSON config files under `/conf` for the light, SD card, installed apps, and general flags
-- **Autorun** – optionally execute a script (`trun.run`) automatically before dropping into the shell
-- **Error logging** – failures are optionally logged to the SD card (or flash if no SD card is present)
-- **One-command installer** – a PC-side script that flashes MicroPython, copies every file over `mpremote`, and walks you through configuration
-
-## Supported hardware
-
-- Raspberry Pi Pico / Pico W (RP2040)
-- Raspberry Pi Pico 2 / Pico 2 W (RP2350)
-- An SPI SD card module (optional)
-- An onboard/external LED or a NeoPixel (optional, used for status indication)
+- **SD card support** This is one of the biggest success in this operating system. Wtih this you can enlarge you space, download apps and files from your classic PC to your pico or vice versa.
+- **Build in text editor** I tryed to make it as similiar as possible as the original nano editor. With this you can simply edit your configuration, lokaly write or edit programs, and everything when you need do something with text files.
+- **Similiarity with Linux** Yeah som I tried to make it very simial as Linux so some of the commands are same as on the linux. You can learn why there.
+- **Debuging** So debugging this whole system was pain and this is why I made debuging tools as: Light debugging - with this you can debug what is happening only with light source as LED or Nepixel LED; On boot debugging - so this is same as on linux where on booting you can see how its your system doing; Errors saving - so with this the errors can be automaticly saved in to flash memory or into SD card as "errors.txt"
+- **Trun** If you want to build robot or anything with code that should boot immediately without user input this is thing for you. Trun its automaticly enabled but it's not working until you make and write into file "trun.run" python code path that you want to run.
 
 ## Repository layout
 
 ```
 PicoOS/
-├── main.py                  # Entry point run automatically by MicroPython
-├── installer.py             # PC-side installer (flashes MicroPython + deploys files)
+├── main.py                 
+├── installer.py             
 ├── kernel/
-│   ├── boot.py               # Boot sequence
-│   ├── system.py             # Prints system/CPU/RAM/flash info
-│   ├── config.py             # JSON-backed configuration store
-│   ├── colors.py             # ANSI color helpers
-│   └── debug.py              # Error logging and status output
+│   ├── boot.py               
+│   ├── system.py             
+│   ├── config.py            
+│   ├── colors.py            
+│   └── debug.py             
 ├── shell/
-│   ├── terminal.py           # Shell loop and command dispatch
-│   └── commands.py           # Built-in commands
+│   ├── terminal.py           
+│   └── commands.py           
 ├── system/
-│   ├── apps.py                # App loading/installing
-│   ├── make_directory.py      # Creates /apps and /conf on first boot
-│   └── trun.py                 # Runs an autostart script if enabled
+│   ├── apps.py                
+│   ├── make_directory.py     
+│   └── trun.py                 
 ├── drivers/
-│   ├── led.py                 # Status light driver (LED or NeoPixel)
-│   ├── sdcard_driver.py        # SD card mounting via SPI
-│   └── sdcard.py               # SPI SD card block driver
+│   ├── led.py                 
+│   ├── sdcard_driver.py      
+│   └── sdcard.py              
 └── apps/
-    └── nano.py                 # A small text editor app
+    └── nano.py                 
 ```
 
 ## Installation
 
-The installer runs on your computer and talks to the Pico over USB via [`mpremote`](https://docs.micropython.org/en/latest/reference/mpremote.html).
+1. Copy this repo:
+   ```
+   git clone https://github.com/patriq128/PicoOS.git
+   ```
 
-1. Install the Python dependencies:
+2. Enter into folder:
    ```
-   pip install mpremote psutil requests
+   cd PicoOS
    ```
-2. Connect the Pico to your computer.
-3. Run the installer from the project root:
+
+3. Install the Python dependencie:
+   ```
+   pip install -r requirements.txt
+   ```
+
+4. Run the installer:
    ```
    python installer.py
    ```
-4. Follow the prompts:
-   - Choose your board (`RPI_PICO`, `RPI_PICO_W`, `RPI_PICO2`, `RPI_PICO2_W`) to download and flash the latest MicroPython firmware, or skip this step if MicroPython is already installed.
-   - The installer creates the required directories on the board and copies `kernel/`, `shell/`, `system/`, `drivers/`, `apps/`, and `main.py`.
-   - Finish the configuration wizard to set the status light type/pin, SD card pins, and whether debug logging is enabled. Pressing Enter at each step keeps the defaults.
+   or
+   ```
+   python3 installer.py
+   ```
 
-On boot, MicroPython automatically runs `main.py`, which hands off to `kernel/boot.py`.
+5. Follow the promts
 
-## Installer details
+### What is this installler doing
+I tried to make it simplest as possible so this is things that the installer do for you:
 
-`installer.py` has three modes, selected by command-line flag:
+- **Automaticly installing MicroPython** I know some of the peoples doesnt know ho to install micropython to pico so this can download ".uf2" and install it for you
+- **Copying** Installer automaticly make folders and copy all of the files
+- **Configuration** You dont need to manualy change the conf files with installer you can selct the configuration things as Light source, SD card module pins and if you want not disable debugging tools  
 
-| Command | Behavior |
-|---|---|
-| `python installer.py` | Full setup: flash MicroPython, copy all project files, run the configuration wizard, then reset the board and open a serial monitor |
-| `python installer.py --update` | Re-copy `kernel/`, `shell/`, `system/`, `drivers/`, `apps/`, and `main.py` without reflashing MicroPython or reconfiguring |
-| `python installer.py --monitor` | Reset the board and open a serial monitor (`mpremote repl`) without copying anything |
+### Some commands for installer
+I made some commands that you can use:
 
-### What each step does
-
-- **`install_micropython()`** – prompts for a board type, downloads the matching `.uf2` from `micropython.org`, waits for the Pico to appear in BOOTSEL mode (detected via `psutil.disk_partitions()`), and copies the `.uf2` to it. Entering `*` skips this step if MicroPython is already installed.
-- **`copy_files()`** – creates `/apps`, `/drivers`, `kernel`, `/shell`, `/system`, and `/conf` on the board over `mpremote`, then copies each project folder and `main.py`. It also writes a default `conf/apps.conf` entry registering the bundled `nano` app.
-- **`conf()`** – the configuration wizard. Prompts for the status light type/pin (writes `conf/debug_light.conf`), SD card pins (writes `conf/sd_card.conf`), and whether to enable debug logging (writes `conf/configuration.conf`). Pressing Enter at any prompt skips that file, leaving PicoOS to fall back on its built-in defaults. Any files written are copied to the board's `/conf` at the end.
-
-## Boot sequence
-
-1. Clear the screen and print the startup logo.
-2. Print system information (`kernel/system.py`): OS release, machine, CPU frequency, RAM, and flash usage.
-3. Create `/apps` and `/conf` if they don't exist yet.
-4. Attempt to mount an SD card, if configured.
-5. Run `trun.run` at the filesystem root if autorun is enabled and the file exists.
-6. Blink the status light.
-7. Start the interactive shell.
-
-## Shell commands
-
-| Command | Description |
-|---|---|
-| `echo <text>` | Print text |
-| `hello` | Print a greeting |
-| `clean` | Clear the screen |
-| `exit` | Reset the board |
-| `cd <path>` | Change directory |
-| `python <file>` | Execute a MicroPython script |
-| `mkdir <name>` | Create a directory |
-| `ls` | List the current directory |
-| `rm <path>` | Remove a file or directory |
-| `cat <file>` | Print a file's contents |
-| `touch <file>` | Create an empty file |
-| `mv <src> <dst>` | Rename/move a file |
-| `mount sd` | Mount the SD card |
-| `unmount <name>` | Unmount a mounted volume |
-| `install <app>` | Install an app from the current directory into `/apps` |
-| `enable <flag>` / `disable <flag>` | Toggle a configuration flag |
-
-Any command that isn't built in is looked up as an installed app under `/apps`.
-
-## Configuration
-
-Settings are stored as JSON under `/conf`:
-
-| File | Purpose |
-|---|---|
-| `configuration.conf` | General flags, e.g. `debugging` and `trun` (autorun) |
-| `debug_light.conf` | Status light `Type` (`Led` or `Neopixel`) and `Pin` |
-| `sd_card.conf` | SPI pins for the SD card: `sck`, `mosi`, `miso`, `cs` |
-| `apps.conf` | Registry of installed apps and their versions |
-
-If a config file is missing, sensible defaults are generated automatically (status light on pin 25, SD card on pins `sck=2, mosi=3, miso=4, cs=5`).
-
-### Autorun
-
-Place a script at `trun.run` in the root of the filesystem. If the `trun` flag is enabled, it runs once at boot, before the shell starts.
-
-## Writing an app
-
-An app is a single `.py` file placed in `apps/` (or copied to the board and installed with `install <name>`). It must define:
-
-```python
-def install():
-    return {
-        "name": "myapp",
-        "version": "1.0",
-        "autor": "your_name",
-    }
-
-def main(path):
-    # path is the absolute path passed as the command's argument
-    ...
-```
-
-Once installed, the app can be run from the shell by typing its name followed by an argument, for example:
-
-```
-nano notes.txt
-```
-
-`apps/nano.py` is a working example: a minimal line-based text editor supporting arrow-key navigation, tab insertion, and save/quit via `Ctrl+S` / `Ctrl+Q`.
-
-## Error logging
-
-When `debugging` is enabled, failures raised by the kernel, drivers, or apps are appended to `errors.txt` — on the SD card if one is mounted, otherwise on the board's internal flash.
+- **-- update** This skip installing Micropython and configuration and with this you can update your system codes.
+- **-- monitor** If you don't want to connect to serial monitor you can use this script and this reboot and then conenct to pico.
