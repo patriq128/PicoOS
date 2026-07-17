@@ -9,7 +9,7 @@ Terminal-based operating system fully written in MicroPython for the Raspberry P
 ## Features
 
 * **SD card support**
-  This is one of the biggest achievements in this operating system. With this, you can expand your storage, download apps and files from your PC to your Pico, or vice versa.
+  With this, you can expand your storage, download apps and files from your PC to your Pico, or vice versa. I am very happy that I made this.
 
 * **Built-in text editor**
   I tried to make it as similar as possible to the original Nano editor. With this, you can easily edit your configuration, write or edit programs locally, and do anything you need with text files.
@@ -31,30 +31,30 @@ Terminal-based operating system fully written in MicroPython for the Raspberry P
 
 ```text
 PicoOS/
-├── main.py
-├── installer.py
-├── requirements.txt
+├── main.py #because MicroPython automatically runs main.py, I made this file and it just runs the boot process
+├── installer.py #with this script PicoOS is installed and configured
+├── requirements.txt #Python dependencies for the installer
 ├── kernel/
-│   ├── boot.py
-│   ├── system.py
-│   ├── config.py
-│   ├── colors.py
-│   └── debug.py
+│   ├── boot.py #running boot sequences and printing the ASCII logo
+│   ├── system.py #prints all information about the system
+│   ├── config.py #system services configuration
+│   ├── colors.py #library for colored text
+│   └── debug.py #debugging messages during boot and saving errors
 ├── shell/
-│   ├── terminal.py
-│   └── commands.py
+│   ├── terminal.py #the whole shell system
+│   └── commands.py #built-in commands
 ├── system/
-│   ├── apps.py
-│   ├── make_directory.py
-│   └── trun.py
+│   ├── apps.py #app runner and installer
+│   ├── make_directory.py #creates basic directories if they don't exist
+│   └── trun.py #automatically runs Python code after boot
 ├── drivers/
-│   ├── led.py
-│   ├── sdcard_driver.py
-│   └── sdcard.py
+│   ├── led.py #light debugging
+│   ├── sdcard_driver.py #SD card driver built on the SD card library
+│   └── sdcard.py #library for SD cards
 └── apps/
-    └── nano.py
+    └── nano.py #built-in text editor
 ```
-
+> **The SD card driver used in PicoOS is based on the MicroPython SD card library:** https://github.com/micropython/micropython-lib/blob/master/micropython/drivers/storage/sdcard/sdcard.py
 ## Installation
 
 1. Clone this repository:
@@ -88,6 +88,8 @@ PicoOS/
    ```
 
 5. Follow the prompts.
+
+> **Note:** On Linux, I recomend to use `sudo`
 
 ### What does the installer do?
 

@@ -1,3 +1,6 @@
+# Based on:
+# https://github.com/micropython/micropython-lib/blob/master/micropython/drivers/storage/sdcard/sdcard.py
+
 """
 MicroPython driver for SD cards using SPI bus.
 
