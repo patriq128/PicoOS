@@ -22,23 +22,27 @@ class Apps:
         with open("/conf/apps.conf", "w") as f:
             json.dump(data, f)
 
-    def run(self, app, arg1):
-        try:
-            actualpath = os.getcwd()
-            module_name = "apps." + app
+    def run(self, app, args=None):
+        if args is None:
+            args = []
+        elif not isinstance(args, (list, tuple)):
+            args = [args]
 
+        try:
+            module_name = "apps." + app
             mod = __import__(module_name)
             for part in module_name.split(".")[1:]:
                 mod = getattr(mod, part)
-
-            arg2 = arg1[0] if isinstance(arg1, (list, tuple)) else arg1
-
-            mod.main(actualpath + "/" + arg2)
-
         except Exception as e:
             print("Error loading app:", e)
             debug.error("Error loading app", str(e))
-            print("called error")
+            return
+
+        try:
+            mod.main(*args)
+        except Exception as e:
+            print("Error running app:", e)
+            debug.error("Error running app", str(e))
 
 
 apps = Apps()

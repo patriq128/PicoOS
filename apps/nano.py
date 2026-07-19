@@ -13,6 +13,9 @@ def clean():
 
 def main(arg):
 
+    if not arg.startswith("/"):
+        arg = os.getcwd().rstrip("/") + "/" + arg
+
     lines = []
 
     def load_file():
@@ -20,13 +23,12 @@ def main(arg):
             with open(arg, "r") as f:
                 for l in f:
                     lines.append(l.rstrip("\n"))
-        except:
-            lines.append(" \n")
+            if not lines:
+                lines.append("")
+        except OSError:
+            lines.append("")
 
-    if arg in os.listdir():
-        load_file()
-    else:
-        lines = [""]
+    load_file()
 
     x = 0
     y = 0
@@ -37,8 +39,8 @@ def main(arg):
         for l in lines:
             print(l)
 
-        print("\033[s", end="") 
-        print(f"\033[{len(lines)+2};1H", end="") 
+        print("\033[s", end="")
+        print(f"\033[{len(lines)+2};1H", end="")
         print("--- Ctrl+Q exit | Ctrl+S save ---", end="")
         print("\033[u", end="")
 
