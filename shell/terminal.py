@@ -5,7 +5,7 @@ import os
 from system.apps import apps
 from kernel.colors import colors
 
-from shell.commands import echo, hello, clean, exit, cd, python, mkdir, ls, rm, cat, touch, mv
+from shell.commands import echo, hello, clean, exit, cd, python, mkdir, ls, rm, cat, touch, mv, python
 from drivers.sdcard_driver import mount, unmount
 from kernel.config import enable, disable
 from system.apps import install
@@ -30,7 +30,8 @@ def command_list():
         "install": install,
         "disable": disable,
         "enable": enable,
-        "sysinfo": system
+        "sysinfo": system,
+        "run": python
     }
 
 def terminal():
