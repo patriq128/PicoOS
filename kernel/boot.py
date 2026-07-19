@@ -9,7 +9,6 @@ from system.make_directory import make_basic_directory
 from kernel.system import system
 
 def main():
-    clean()
     time.sleep(3)
     print("""
 \033[95m⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠊⠉⠐⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
