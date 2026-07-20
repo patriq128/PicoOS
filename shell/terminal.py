@@ -1,5 +1,8 @@
 # TODO:
-# - Add command list where gonna be where is every command
+# - Make the comand list as conf file
+
+# FIXME:
+# - Delte the wifi things when its not Pico W
 
 import os
 from system.apps import apps
@@ -11,7 +14,7 @@ from kernel.config import enable, disable
 from system.apps import install
 from kernel.system import system
 from drivers.wifi import wifi_driver, ping
-
+from system.app_internet import apps as apps_internet
 def command_list():
     return {
         "echo": echo,
@@ -34,7 +37,8 @@ def command_list():
         "sysinfo": system,
         "run": python,
         "wifi": wifi_driver,
-        "ping": ping
+        "ping": ping,
+        "app_install": apps_internet.install
     }
 
 def terminal():

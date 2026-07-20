@@ -16,11 +16,16 @@ def pico_exists(path):
 
     return result.returncode == 0
 
-def copy(folder):
+def copy(folder, dont_file=None):
     files = os.listdir(folder)
+
     for file in files:
+        if file == dont_file:
+            continue
+
         pc_file = os.path.join(folder, file)  # type: ignore
         pico_file = f":{folder}/{file}"
+
         if pico_exists(pico_file):
             subprocess.run([
                 "mpremote",
@@ -28,6 +33,7 @@ def copy(folder):
                 "rm",
                 pico_file
             ])
+
         subprocess.run([
             "mpremote",
             "cp",
@@ -121,6 +127,15 @@ def copy_files():
             break
         else:
             time.sleep(0.5)
+
+    result = subprocess.check_output(
+        ["mpremote", "exec", "import sys; print(sys.implementation._machine)"]).decode() #type: ignore
+    if "Pico W" in result:
+        W = True
+        print("Pico W")
+    else:
+        W = False
+
     print("Making directorys...")
     subprocess.run(["mpremote", "mkdir", ":apps"])
     subprocess.run(["mpremote", "mkdir", ":drivers"])
@@ -136,10 +151,16 @@ def copy_files():
     copy("shell")
 
     print("Installing system...")
-    copy("system")
+    if W:
+        copy("system")
+    else:
+        copy("system", "app_internet.py")
 
     print("Installing drivers...")
-    copy("drivers")
+    if W:
+        copy("drivers")
+    else:
+        copy("drivers", "wifi.py")
 
     print("Installing apps...")
     copy("apps")
@@ -147,6 +168,7 @@ def copy_files():
     print("Installing main ...")
     subprocess.run(["mpremote", "cp", "main.py", ":"])
 
+def conf():
     print("Installing nano...")
     data = {"nano": {"Autor": "ZiDi", "Version": "1.1"}}
     os.makedirs("conf", exist_ok=True)
@@ -154,8 +176,6 @@ def copy_files():
         json.dump(data, f)
 
     print("Configuration time...")
-
-def conf():
     print("* Press enter for setup default")
     print("Led driver:")
     print("""What type of Light do you have ?
