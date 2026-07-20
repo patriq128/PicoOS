@@ -10,6 +10,7 @@ from drivers.sdcard_driver import mount, unmount
 from kernel.config import enable, disable
 from system.apps import install
 from kernel.system import system
+from drivers.wifi import wifi_driver, ping
 
 def command_list():
     return {
@@ -31,7 +32,9 @@ def command_list():
         "disable": disable,
         "enable": enable,
         "sysinfo": system,
-        "run": python
+        "run": python,
+        "wifi": wifi_driver,
+        "ping": ping
     }
 
 def terminal():

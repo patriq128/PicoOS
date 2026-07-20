@@ -7,7 +7,7 @@ from system.trun import trun
 from shell.commands import clean
 from system.make_directory import make_basic_directory
 from kernel.system import system
-
+from drivers.wifi import auto_connect
 def main():
     time.sleep(3)
     print("""
@@ -40,9 +40,8 @@ def main():
     system()
     make_basic_directory()
     sd_card.test()
+    auto_connect()
     debugging_light("off")
     trun()
     debugging_light("on")
-    time.sleep(0.3)
-    debugging_light("off")
     terminal()

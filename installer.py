@@ -154,9 +154,9 @@ def copy_files():
         json.dump(data, f)
 
     print("Configuration time...")
-    print("* Press enter for setup default")
 
 def conf():
+    print("* Press enter for setup default")
     print("Led driver:")
     print("""What type of Light do you have ?
     1. Led
