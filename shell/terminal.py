@@ -5,43 +5,75 @@
 # - Delte the wifi things when its not Pico W
 
 import os
+import sys
 from system.apps import apps
 from kernel.colors import colors
-
-from shell.commands import echo, hello, clean, exit, cd, python, mkdir, ls, rm, cat, touch, mv, python
+from shell.commands import echo, hello, clean, exit, cd, python, mkdir, ls, rm, cat, touch, mv, python, restart
 from drivers.sdcard_driver import mount, unmount
 from kernel.config import enable, disable
 from system.apps import install
 from kernel.system import system
-from drivers.wifi import wifi_driver, ping
-from system.app_internet import apps as apps_internet
-from system.app_internet import update
+
+result = sys.implementation._machine
+if "Pico W" in result:
+    W = True
+else:
+    W = False
+if W:
+    from drivers.wifi import wifi_driver, ping
+    from system.app_internet import apps as apps_internet
+    from system.app_internet import update
 def command_list():
-    return {
-        "echo": echo,
-        "hello": hello,
-        "clean": clean,
-        "exit": exit,
-        "cd": cd,
-        "python": python,
-        "mkdir": mkdir,
-        "ls": ls,
-        "rm": rm,
-        "cat": cat,
-        "touch": touch,
-        "mv": mv,
-        "mount": mount,
-        "unmount": unmount,
-        "install": install,
-        "disable": disable,
-        "enable": enable,
-        "sysinfo": system,
-        "run": python,
-        "wifi": wifi_driver,
-        "ping": ping,
-        "app_install": apps_internet.install,
-        "update": update
-    }
+    if W:
+        return {
+            "echo": echo,
+            "hello": hello,
+            "clean": clean,
+            "exit": exit,
+            "cd": cd,
+            "python": python,
+            "mkdir": mkdir,
+            "ls": ls,
+            "rm": rm,
+            "cat": cat,
+            "touch": touch,
+            "mv": mv,
+            "mount": mount,
+            "unmount": unmount,
+            "install": install,
+            "disable": disable,
+            "enable": enable,
+            "sysinfo": system,
+            "run": python,
+            "wifi": wifi_driver,
+            "ping": ping,
+            "app_install": apps_internet.install,
+            "update": update,
+            "restart": restart
+        }
+    else:
+        return {
+            "echo": echo,
+            "hello": hello,
+            "clean": clean,
+            "exit": exit,
+            "cd": cd,
+            "python": python,
+            "mkdir": mkdir,
+            "ls": ls,
+            "rm": rm,
+            "cat": cat,
+            "touch": touch,
+            "mv": mv,
+            "mount": mount,
+            "unmount": unmount,
+            "install": install,
+            "disable": disable,
+            "enable": enable,
+            "sysinfo": system,
+            "run": python,
+            "restart": restart
+        }
 
 def terminal():
     commands = command_list()

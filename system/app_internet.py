@@ -70,3 +70,6 @@ def update():
                 data = get_file.text
                 with open(f"/{code}", "w") as f:
                     f.write(data)
+    else:
+        print("There is nothing to do")
+        print("Everything is upadted :3")

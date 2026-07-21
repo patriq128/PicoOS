@@ -1,5 +1,5 @@
 import time
-
+import sys
 from drivers.sdcard_driver import sd_card
 from shell.terminal import terminal
 from drivers.led import debugging_light
@@ -35,12 +35,17 @@ def main():
 ⠀⠀⠀⠈⠉⠒⠤⠄⣀⣰⣿⣿⣷⣿⡟⠁⠀⠀⠈⠱⡄⠀⠀⠀⠉⠉⠉⠁⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠙⠛⠿⠤⢀⣀⣀⣀⡴⠃⠀\033[0m""")
     print("\nBooting PicoOS")
-
+    result = sys.implementation._machine
+    if "Pico W" in result:
+        W = True
+    else:
+        W = False
     # On boot processes 
     system()
     make_basic_directory()
     sd_card.test()
-    auto_connect()
+    if W:
+        auto_connect()
     debugging_light("off")
     trun()
     debugging_light("on")

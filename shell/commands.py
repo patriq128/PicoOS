@@ -67,3 +67,7 @@ def touch(filename):
 
 def mv(first, second):
     os.rename(first, second)
+
+def restart():
+    from kernel.boot import main
+    main()
