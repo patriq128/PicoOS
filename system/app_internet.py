@@ -1,3 +1,6 @@
+# FIXME
+# - Installing error
+
 import urequests
 from system.apps import install
 
@@ -13,7 +16,6 @@ class Apps:
                 data = response.text
                 with open(f"/{app}.py", "w") as f:
                     f.write(data)
-                install(app)
 
             elif response.status_code == 404:
                 print(f"App {app} not existing")
@@ -24,3 +26,9 @@ class Apps:
             print(e)
 
 apps = Apps()
+
+class System:
+    def update(self):
+        print("Hello")
+        
+system = System()

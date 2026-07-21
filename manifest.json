@@ -1,0 +1,19 @@
+{
+    "main.py": "018f97bf42222bd35505f7b0a64ef0831aa29d2ac5eda049a2237eca7b01fb81",
+    "system/trun.py": "7898f8b377b5a9117fb7bb0b809fac4609a6df4b2f0af1ae194d689a306b0bab",
+    "system/make_directory.py": "5df54379d9ac206707b81b0152c55ab0a833eb6c6576803965cd54bed995266d",
+    "system/app_internet.py": "3a8a22d6ee7f6485c475c6a91d45adae876ee38fd056251c3d7fcb7a3293c016",
+    "system/apps.py": "9c46effec1cd81a375782f060871130671cca6c67f35800f72a3de2f0003fd5d",
+    "apps/nano.py": "2c39deaeaa066f0b273efc341cc5e14082d9b1532cc7e3fbaf9adee2a999fa1c",
+    "drivers/wifi.py": "25597d187aab0b8bca71b2d5a14bb9b42629375515c144424b491c544c2045b5",
+    "drivers/sdcard.py": "55cac2610064374d2d4feb219727b26ad0117797dc3b62b5ca1d2f8977fdebe8",
+    "drivers/led.py": "5d200b3dc0fd8263729dfe700e9b9123bb38c9f125fec6ff0c63f82be38d508a",
+    "drivers/sdcard_driver.py": "3c83495078235a72e4b7691a815276fa1e49e6537418283aa51955446c32d86f",
+    "kernel/boot.py": "03cac6172d782d025ec2157d6384cab5dd7d8e42c5f37bbcc98e9b445ec667fb",
+    "kernel/debug.py": "5730dbe3c3ca3734e52fdd21ebfe640cb4ffa19b38006572922445e8a8229628",
+    "kernel/colors.py": "450aa1b7f37407257c2b11fc986cf2d44bd372df948b47b56fa28b58162140bb",
+    "kernel/system.py": "94aa71d8bf825b8ed708c5ee4da20006ea314a4b7af8ccca19e6ff6863e6d228",
+    "kernel/config.py": "10467814733d2b33242223407c494a539c0452680a078453294c549315f778bd",
+    "shell/commands.py": "0799ccdcf5a7a6d1624b761e1158827a906b50874a531965e316b4789ec0e43f",
+    "shell/terminal.py": "f09a2b41a7dca0f11c412e89186e0f026126f7dc7e5fbba7b1023536887c4cfd"
+}

@@ -17,8 +17,8 @@ def exit():
     print("Good bye!")
     machine.reset()
        
-def cd(arg):
-    if arg == "/" or arg == "":
+def cd(arg=None):
+    if arg == "/" or not arg:
         os.chdir("/")
     elif arg == "..":
         os.chdir("..")
