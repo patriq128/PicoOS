@@ -15,6 +15,7 @@ from system.apps import install
 from kernel.system import system
 from drivers.wifi import wifi_driver, ping
 from system.app_internet import apps as apps_internet
+from system.app_internet import update
 def command_list():
     return {
         "echo": echo,
@@ -38,7 +39,8 @@ def command_list():
         "run": python,
         "wifi": wifi_driver,
         "ping": ping,
-        "app_install": apps_internet.install
+        "app_install": apps_internet.install,
+        "update": update
     }
 
 def terminal():
