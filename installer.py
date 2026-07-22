@@ -87,8 +87,17 @@ def install_micropython():
 
         def pico_boot_mode():
             for partition in psutil.disk_partitions():
-                if "RPI-RP2" in partition.device or "RPI-RP2" in partition.mountpoint:
+                print(partition.device, partition.mountpoint)
+
+                names = [
+                    "RPI-RP2",
+                    "RP2350",
+                    "PICO"
+                ]
+
+                if any(name in partition.mountpoint.upper() for name in names):
                     return True
+
             return False
 
         print("Hold boot button and then plug pico into computer")
@@ -169,6 +178,13 @@ def copy_files():
     subprocess.run(["mpremote", "cp", "main.py", ":"])
 
 def conf():
+
+    result = subprocess.check_output(
+        ["mpremote", "exec", "import sys; print(sys.implementation._machine)"]).decode() #type: ignore
+    if "Pico W" in result:
+        W = True
+    else:
+        W = False
     print("Installing nano...")
     data = {"nano": {"Autor": "ZiDi", "Version": "1.1"}}
     os.makedirs("conf", exist_ok=True)
@@ -211,6 +227,23 @@ def conf():
         data = {"cs": cs, "mosi": mosi, "sck": sck, "miso": miso}
         os.makedirs("conf", exist_ok=True)
         with open("conf/sd_card.conf", "w") as f:
+            json.dump(data, f)
+
+    if W:
+        print("Do you want to configure WiFi ?")
+        ok = input("[Y/n] >> ")
+        if ok == "y":
+            SSID = input("SSID: ")
+            PASSWORD = input("PASSWORD: ")
+            autoconnect = input("Enable autoconnect [Y/n]: ")
+            if autoconnect == "y":
+                autoconnect = True
+            else:
+                autoconnect = False
+        data = []
+        data.append({"SSID": SSID, "PASSWORD": PASSWORD, "Autoconnect": autoconnect})
+        os.makedirs("conf", exist_ok=True)
+        with open("conf/wifi.conf", "w") as f:
             json.dump(data, f)
 
     print("Do you want to disable debbuging mode ?")

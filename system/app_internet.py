@@ -6,47 +6,89 @@ from system.apps import install
 import ujson
 import hashlib
 import os
+import sys
+from system.apps import apps as apps_saving
 
-class Apps:
-    def install(self, app):
-        url = f"https://picoos.dev/download/apps/{app}.py"
+def hash_count(path):
+    h = hashlib.sha256()
 
+    with open(path, "rb") as f:
+        while True:
+            chunk = f.read(512)
+            if not chunk:
+                break
+            h.update(chunk)
+
+    return ''.join('{:02x}'.format(b) for b in h.digest())
+
+
+def apps(command, app):
+    if command == "update":
+        manifest = urequests.get("https://picoos.dev/download/apps/manifest.json")
+        data = manifest.json()
         try:
-            response = urequests.get(url)
-
-            if response.status_code == 200:
-                print(f"Installing {app}")
-                data = response.text
-                with open(f"/{app}.py", "w") as f:
+            os.stat(f"/apps/{app}.py")
+            exist = True
+        except:
+            exist = False
+        if exist:
+            if hash_count(f"/apps/{app}.py") != data[app]:
+                print(f"Updating \033[32m{app}\033[0m")
+                get_file = urequests.get(f"https://picoos.dev/download/apps/{app}.py")
+                data = get_file.text
+                with open(f"/apps/{app}.py", "w") as f:
                     f.write(data)
+                get_file.close()
+            else:
+                print("App already updated")
+        else:
+            print(f"App {app} not installed.")
+        manifest.close()
 
-            elif response.status_code == 404:
-                print(f"App {app} not existing")
+    elif command == "install":
+        manifest = urequests.get("https://picoos.dev/download/apps/manifest.json")
+        data = manifest.json()
+        if app in data:
+            try:
+                os.stat(f"/apps/{app}.py")
+                exist = True
+            except:
+                exist = False
+            if exist:
+                if hash_count(f"/apps/{app}.py") == data[app]:
+                    print(f"App \033[32m{app}\033[0m already installed and updated")
+                else:
+                    print(f"Updating \033[32m{app}\033[0m")
+                    get_file = urequests.get(f"https://picoos.dev/download/apps/{app}.py")
+                    data = get_file.text
+                    with open(f"/apps/{app}.py", "w") as f:
+                        f.write(data)
+                    get_file.close()
+            else:
+                print(f"Installing \033[32m{app}\033[0m")
+                get_file = urequests.get(f"https://picoos.dev/download/apps/{app}.py")
+                data = get_file.text
+                with open(f"/apps/{app}.py", "w") as f:
+                    f.write(data)
+                get_file.close()
+                sys.path.append("/apps")
 
-            response.close()
+                module = __import__(app)
+                info = module.install()
 
-        except Exception as e:
-            print(e)
-
-apps = Apps()
+                data = {
+                    info["name"]: {
+                        "Version": info["version"],
+                        "Autor": info["autor"]
+                    }
+                }
+                apps_saving.save(data)
+        manifest.close()
 
 def update():
     update = []
     manifest = urequests.get("https://picoos.dev/download/system/manifest.json")
     data = manifest.json()
-
-    def hash_count(path):
-        h = hashlib.sha256()
-
-        with open(path, "rb") as f:
-            while True:
-                chunk = f.read(512)
-                if not chunk:
-                    break
-                h.update(chunk)
-
-        return ''.join('{:02x}'.format(b) for b in h.digest())
-
 
     for file in data.keys():
 
@@ -62,14 +104,18 @@ def update():
     if update:
         print("Files to update / install:")
         for code in update:
-            print(code)
-        respond = input("Continue ? [Y/n]: ")
+            print("\033[32m", code)
+        respond = input("\033[0mContinue ? [Y/n]: \033[0m")
         if respond == "y":
             for code in update:
+                print(f"Downloading\033[32m {code}\033[0m")
                 get_file = urequests.get(f"https://picoos.dev/download/system/{code}")
                 data = get_file.text
                 with open(f"/{code}", "w") as f:
                     f.write(data)
+            print("\033[32m Done :)\033[0m")
+            get_file.close()
     else:
         print("There is nothing to do")
         print("Everything is upadted :3")
+    manifest.close()

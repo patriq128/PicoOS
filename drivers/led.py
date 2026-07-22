@@ -19,7 +19,7 @@ def debugging_light(state):
 
         data = load()
         if data["Type"] == "Led":
-            led = machine.Pin(int(data["Pin"]), machine.Pin.OUT)
+            led = machine.Pin(data["Pin"], machine.Pin.OUT)
 
             if state == "on":
                 led.value(1)
@@ -38,7 +38,7 @@ def debugging_light(state):
         elif data["Type"] == "Neopixel":
             import neopixel
 
-            pin = machine.Pin(int(data["Pin"]), machine.Pin.OUT)
+            pin = machine.Pin(data["Pin"], machine.Pin.OUT)
 
             np = neopixel.NeoPixel(pin, 1)
 

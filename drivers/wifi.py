@@ -13,27 +13,75 @@ class Saving:
         try:
             with open("/conf/wifi.conf", "r") as f:
                 data = json.load(f)
-            return data["SSID"], data["PASSWORD"], data["Autoconnect"]
+            return data
         except:
-            return False, False, False
+            return False
 
     def save(self, SSID, PASSWORD, autoconnect):
-        data = {"SSID": SSID, "PASSWORD": PASSWORD, "Autoconnect": autoconnect}
+        try:
+            with open("/conf/wifi.conf", "r") as f:
+                data = json.load(f)
+        except:
+            data = []
+
+        data.append({
+            "SSID": SSID,
+            "PASSWORD": PASSWORD,
+            "Autoconnect": autoconnect
+        })
+
         with open("/conf/wifi.conf", "w") as f:
             json.dump(data, f)
+
         colors.green("Saved")
+
 
 saving = Saving()
 
 def auto_connect():
-    SSID, PASSWORD, Autoconnect = saving.load()
-    if SSID and PASSWORD and Autoconnect:
-        wlan.connect(SSID, PASSWORD)
-        while not wlan.isconnected():
-            time.sleep(0.5)
-        load_output("ok", "WiFi", "necesery", f"Connected to {SSID}")
-    else:
+    try:
+        data = saving.load()
+
+        if not data:
+            load_output("false", "WiFi", "necesery", "No WiFi config")
+            return
+
+        networks = wlan.scan()
+
+        available = []
+
+        for wifi in data:
+            for network in networks:
+                ssid = network[0].decode()
+
+                if ssid == wifi["SSID"]:
+                    available.append({
+                        "SSID": wifi["SSID"],
+                        "PASSWORD": wifi["PASSWORD"],
+                        "RSSI": network[3]
+                    })
+
+        if not available:
+            load_output("false", "WiFi", "necesery", "No saved WiFi found")
+            return
+
+        available.sort(key=lambda x: x["RSSI"], reverse=True)
+
+        for wifi in available:
+            wlan.connect(wifi["SSID"], wifi["PASSWORD"])
+
+            timeout = 10
+            while not wlan.isconnected() and timeout > 0:
+                time.sleep(1)
+                timeout -= 1
+
+            if wlan.isconnected():
+                load_output("ok", "WiFi", "necesery", "Connected to " + wifi["SSID"])
+                return
+
         load_output("false", "WiFi", "necesery", "Fail to connect")
+    except:
+        load_output("false", "WiFi", "necesery", "Something is wrong")
 
 def wifi_driver(command):
     if command == "connect":

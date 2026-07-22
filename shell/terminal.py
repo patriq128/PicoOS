@@ -47,7 +47,7 @@ def command_list():
             "run": python,
             "wifi": wifi_driver,
             "ping": ping,
-            "app_install": apps_internet.install,
+            "app": apps_internet,
             "update": update,
             "restart": restart
         }
