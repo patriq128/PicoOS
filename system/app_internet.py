@@ -1,9 +1,9 @@
 # FIXME
 # - Installing error
 
-import urequests
+import urequests #type: ignore
 from system.apps import install
-import ujson
+import ujson #type: ignore
 import hashlib
 import os
 import sys
@@ -84,6 +84,7 @@ def apps(command, app):
                 }
                 apps_saving.save(data)
         manifest.close()
+
 
 def update():
     update = []
