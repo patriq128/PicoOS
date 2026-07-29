@@ -8,10 +8,10 @@ import os
 import sys
 from system.apps import apps
 from kernel.colors import colors
-from shell.commands import echo, hello, clean, exit, cd, python, mkdir, ls, rm, cat, touch, mv, python, restart
+from shell.commands import echo, hello, clean, exit, cd, python, mkdir, ls, rm, cat, touch, mv, python, restart, pwd
 from drivers.sdcard_driver import mount, unmount
 from kernel.config import enable, disable
-from system.apps import install
+from system.apps import apps_manager
 from kernel.system import system
 
 result = sys.implementation._machine
@@ -21,8 +21,7 @@ else:
     W = False
 if W:
     from drivers.wifi import wifi_driver, ping
-    from system.app_internet import apps as apps_internet
-    from system.app_internet import update
+    from system.system_update import update
 def command_list():
     if W:
         return {
@@ -33,6 +32,7 @@ def command_list():
             "cd": cd,
             "python": python,
             "mkdir": mkdir,
+            "pwd": pwd,
             "ls": ls,
             "rm": rm,
             "cat": cat,
@@ -40,14 +40,13 @@ def command_list():
             "mv": mv,
             "mount": mount,
             "unmount": unmount,
-            "install": install,
             "disable": disable,
             "enable": enable,
             "sysinfo": system,
             "run": python,
             "wifi": wifi_driver,
             "ping": ping,
-            "app": apps_internet,
+            "app": apps_manager.main,
             "update": update,
             "restart": restart
         }
@@ -60,6 +59,7 @@ def command_list():
             "cd": cd,
             "python": python,
             "mkdir": mkdir,
+            "pwd": pwd,
             "ls": ls,
             "rm": rm,
             "cat": cat,
@@ -67,18 +67,18 @@ def command_list():
             "mv": mv,
             "mount": mount,
             "unmount": unmount,
-            "install": install,
             "disable": disable,
             "enable": enable,
             "sysinfo": system,
             "run": python,
-            "restart": restart
+            "restart": restart,
+            "app": apps_manager.main
         }
 
 def terminal():
     commands = command_list()
     while True:
-        command = input(os.getcwd() + "\033[32m >> \033[0m")
+        command = input("\033[0m" + os.getcwd() + "\033[32m >> \033[0m")
         part = command.split()
         if not part:
             continue

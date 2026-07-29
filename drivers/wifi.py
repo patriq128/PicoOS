@@ -40,6 +40,7 @@ saving = Saving()
 
 def auto_connect():
     try:
+        load_output("info", "WiFi", "necesery", "Connecting to WiFi")
         data = saving.load()
 
         if not data:

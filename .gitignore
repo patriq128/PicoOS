@@ -5,3 +5,4 @@ main.py.copy
 conf/
 manifest.py
 manifest_config.json
+external_tools/build

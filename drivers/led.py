@@ -11,7 +11,7 @@ def debugging_light(state):
                 with open("/conf/debug_light.conf", "r") as f:
                     data = json.load(f)
             except:
-                data = {"Type": "Led", "Pin": 25}
+                data = {"Type": "Led", "Pin": "LED"}
                 with open("/conf/debug_light.conf", "w") as f:
                     json.dump(data, f)
             return data
@@ -19,7 +19,10 @@ def debugging_light(state):
 
         data = load()
         if data["Type"] == "Led":
-            led = machine.Pin(data["Pin"], machine.Pin.OUT)
+            if data["Pin"] == "LED":
+                led = machine.Pin("LED", machine.Pin.OUT)
+            else:
+                led = machine.Pin(int(data["Pin"]), machine.Pin.OUT)
 
             if state == "on":
                 led.value(1)
@@ -38,7 +41,7 @@ def debugging_light(state):
         elif data["Type"] == "Neopixel":
             import neopixel
 
-            pin = machine.Pin(data["Pin"], machine.Pin.OUT)
+            pin = machine.Pin(int(data["Pin"]), machine.Pin.OUT)
 
             np = neopixel.NeoPixel(pin, 1)
 

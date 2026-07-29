@@ -39,11 +39,22 @@ def python(arg):
 
 def mkdir(arg):
     os.mkdir(arg)
+
+def pwd():
+    print(os.getcwd())
        
-def ls():
-    for item in os.listdir():
-        if not item == "main.py":
-            print(item)
+def ls(arg=None):
+    if arg:
+        before = os.getcwd()
+        cd(arg)
+        for item in os.listdir():
+            if not item == "main.py":
+                print(item)
+        cd(before)
+    else:
+        for item in os.listdir():
+            if not item == "main.py":
+                print(item)
 
 def rm(path):
     if path in os.listdir(): 
@@ -65,8 +76,19 @@ def cat(filename):
 def touch(filename):
     open(filename, "w").close()
 
-def mv(first, second):
-    os.rename(first, second)
+def cp(src, dst):
+    with open(src, "rb") as source:
+        with open(dst, "wb") as target:
+            while True:
+                data = source.read(512)
+                if not data:
+                    break
+                target.write(data)
+
+
+def mv(src, dst):
+    cp(src, dst)
+    os.remove(src)
 
 def restart():
     from kernel.boot import main

@@ -1,3 +1,6 @@
+#TODO
+# - Finish the apps installing
+
 import subprocess
 import os
 import shutil
@@ -40,6 +43,21 @@ def copy(folder, dont_file=None):
             pc_file,
             pico_file
         ])
+
+def wait_pico():
+    print("Connecting to Pico...")
+    while True:
+        result = subprocess.run(
+            ["mpremote", "connect", "auto", "exec", "print('OK')"],
+            capture_output=True,
+            text=True
+        )
+
+        if result.returncode == 0:
+            print("Device connected")
+            break
+        else:
+            time.sleep(0.5)
 
 def install_micropython():
     print("""
@@ -123,22 +141,10 @@ def install_micropython():
         print("Installing skiped")
 
 def copy_files():        
-    print("Connecting to Pico...")
-    while True:
-        result = subprocess.run(
-            ["mpremote", "connect", "auto", "exec", "print('OK')"],
-            capture_output=True,
-            text=True
-        )
-
-        if result.returncode == 0:
-            print("Device connected")
-            break
-        else:
-            time.sleep(0.5)
+    wait_pico()
 
     result = subprocess.check_output(
-        ["mpremote", "exec", "import sys; print(sys.implementation._machine)"]).decode() #type: ignore
+       ["mpremote", "exec", "import sys; print(sys.implementation._machine)"]).decode() #type: ignore
     if "Pico W" in result:
         W = True
         print("Pico W")
@@ -171,25 +177,16 @@ def copy_files():
     else:
         copy("drivers", "wifi.py")
 
-    print("Installing apps...")
-    copy("apps")
-
     print("Installing main ...")
     subprocess.run(["mpremote", "cp", "main.py", ":"])
 
 def conf():
-
     result = subprocess.check_output(
         ["mpremote", "exec", "import sys; print(sys.implementation._machine)"]).decode() #type: ignore
     if "Pico W" in result:
         W = True
     else:
         W = False
-    print("Installing nano...")
-    data = {"nano": {"Autor": "ZiDi", "Version": "1.1"}}
-    os.makedirs("conf", exist_ok=True)
-    with open("conf/apps.conf", "w") as f:
-        json.dump(data, f)
 
     print("Configuration time...")
     print("* Press enter for setup default")
@@ -212,22 +209,30 @@ def conf():
         with open("conf/debug_light.conf", "w") as f:
             json.dump(data, f)
 
-    print("SD card configuration:")
-    print("""How do you want to configure your SD card ?
-    1. Manual
-    2./nothing Default""")
-    led_type = input(">> ")
+    if input("Do you have SD card moduule? [Y/n] >> ") == "y":
+        print("SD card configuration:")
+        print("""How do you want to configure your SD card ?
+        1. Manual
+        2. Default""")
+        sd_configuration = input(">> ")
+    
 
-    if led_type and led_type != "2":
-        cs = input("cs >> ")
-        mosi = input("mosi >> ")
-        sck = input("sck >> ")
-        miso = input("miso >> ")
+        if  sd_configuration == "1":
+            cs = input("cs >> ")
+            mosi = input("mosi >> ")
+            sck = input("sck >> ")
+            miso = input("miso >> ")
 
-        data = {"cs": cs, "mosi": mosi, "sck": sck, "miso": miso}
-        os.makedirs("conf", exist_ok=True)
-        with open("conf/sd_card.conf", "w") as f:
-            json.dump(data, f)
+            data = {"cs": cs, "mosi": mosi, "sck": sck, "miso": miso}
+            os.makedirs("conf", exist_ok=True)
+            with open("conf/sd_card.conf", "w") as f:
+                json.dump(data, f)
+                
+        elif sd_configuration == "2":
+            data = {"cs": "5", "mosi": "3", "sck": "2", "miso": "4"}
+            os.makedirs("conf", exist_ok=True)
+            with open("conf/sd_card.conf", "w") as f:
+                json.dump(data, f)
 
     if W:
         print("Do you want to configure WiFi ?")
@@ -257,6 +262,64 @@ def conf():
     if os.path.exists("conf"): #type: ignore
         copy("conf")
 
+def apps():
+    print("Download apps:")
+    manifest = requests.get("https://picoos.dev/download/apps/manifest.json")
+    data = manifest.json()
+    print("Available apps:")
+
+    apps = []
+    selected = []
+
+    a = 0
+    for app in data.keys():
+        a += 1
+        app_name = app.removesuffix(".pcs")
+        apps.append(app_name)
+        print(f"{a}. [ ] {app_name} - {data[app]['description']}")
+
+    choices = input("Select apps (numbers separated by space): ")
+
+    try:
+        choices = [int(x) for x in choices.split()]
+    except ValueError:
+        print("Invalid input!")
+        return
+
+    for choice in choices:
+        if 1 <= choice <= len(apps):
+            selected.append(apps[choice - 1])
+        else:
+            print(f"Invalid number: {choice}")
+
+    print("\nSelected apps:")
+    for app in apps:
+        if app in selected:
+            print(f"[X] {app}")
+        else:
+            print(f"[ ] {app}")
+    print("\nDownloading...")
+
+    for app in selected:
+        if not os.path.exists(f"install_apps/{app}.pcs"):
+            print(f"Downloading {app}.pcs")
+            get_file = requests.get(
+                f"https://picoos.dev/download/apps/{app}.pcs"
+            )
+            os.makedirs("install_apps", exist_ok=True)
+            with open(f"install_apps/{app}.pcs", "wb") as f:
+                f.write(get_file.content)
+            print(f"{app} done!")
+        else:
+            print(f"{app} already exists!")
+    print("All apps installed!")
+    print("Extracting into device")
+    wait_pico()
+    subprocess.run(["mpremote", "mkdir", ":install_apps"])
+    copy("install_apps")
+    for app in selected:
+        subprocess.run(["mpremote", "exec", f"from shell.commands import cd; from system.apps import install; cd('install_apps'); install('{app}')"])
+    subprocess.run(["mpremote", "exec", "from shell.commands import cd, rm; cd(); rm('install_apps')"])
 
 def main():
     if "--monitor" in sys.argv:
@@ -268,6 +331,8 @@ def main():
     elif "--update" in sys.argv:
         print("Updating system...")
         copy_files()
+    elif "--apps" in sys.argv:
+        apps()
     else:
         print("Welcome to PicoOS installer!")
         print("Follow the intructions")
@@ -275,6 +340,7 @@ def main():
         install_micropython()
         copy_files()
         conf()
+        apps()
         print("Everything done!")
         print("Rebooting system...")
         subprocess.run(["mpremote", "reset"])

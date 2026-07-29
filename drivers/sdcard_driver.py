@@ -12,50 +12,49 @@ class Sd_card():
             with open("/conf/sd_card.conf", "r") as f:
                 data = json.load(f)
         except:
-            data = {
-                "sck": 2,
-                "mosi": 3,
-                "miso": 4,
-                "cs": 5
-            }
-            with open("/conf/sd_card.conf", "w") as f:
-                json.dump(data, f)
+            data = None
         return data
 
     def configuration(self):
         data = self.load()
-        spi = machine.SPI(
-            0,
-            baudrate=1_000_000,
-            polarity=0,
-            phase=0,
-            sck=machine.Pin(int(data["sck"])),
-            mosi=machine.Pin(int(data["mosi"])),
-            miso=machine.Pin(int(data["miso"]))
-        )
+        if data:
+            spi = machine.SPI(
+                0,
+                baudrate=1_000_000,
+                polarity=0,
+                phase=0,
+                sck=machine.Pin(int(data["sck"])),
+                mosi=machine.Pin(int(data["mosi"])),
+                miso=machine.Pin(int(data["miso"]))
+            )
 
-        cs = machine.Pin(int(data["cs"]), machine.Pin.OUT)
+            cs = machine.Pin(int(data["cs"]), machine.Pin.OUT)
 
-        return spi, cs
+            return spi, cs
+        else:
+            return None, None
 
     def inicializing(self):
         import drivers.sdcard as sdcard
+        if self.load():
+            spi, cs = self.configuration()
 
-        spi, cs = self.configuration()
-
-        sd = sdcard.SDCard(spi, cs)
-        return sd
+            sd = sdcard.SDCard(spi, cs)
+            return sd
 
     def test(self):
-        try:
-            sd = self.inicializing()
-            os.mount(sd, "/sd")
-            load_output("ok", "SD_card", "necesery", "SD Card is mounted")
-            return True
+        if self.load():
+            try:
+                sd = self.inicializing()
+                os.mount(sd, "/sd")
+                load_output("ok", "SD_card", "necesery", "SD Card is mounted")
+                return True
 
-        except:
-            load_output("false", "SD_card", "necesery", "Fail to mount SD Card")
-            return False
+            except:
+                load_output("false", "SD_card", "necesery", "Fail to mount SD Card")
+                return False
+        else:
+            load_output("false", "SD_card", "not necesery", "sd_card.conf not exist")
 sd_card = Sd_card()
 
 def mount(arg):

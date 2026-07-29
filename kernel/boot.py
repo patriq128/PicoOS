@@ -8,7 +8,7 @@ from shell.commands import clean
 from system.make_directory import make_basic_directory
 from kernel.system import system
 def main():
-    time.sleep(3)
+    time.sleep(2)
     print("""
 \033[95m⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠊⠉⠐⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⢀⠏⠀⠀⠀⠀⠘⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
