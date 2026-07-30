@@ -14,6 +14,7 @@ def sha256_file(path):
             if not data:
                 break
             h.update(data)
+
     return h.hexdigest()
 
 
@@ -23,50 +24,70 @@ def collect_files(folder):
     for root, dirs, filenames in os.walk(folder):
         for file in filenames:
             path = os.path.join(root, file)
-
             rel = os.path.relpath(path, folder)
             files.append(rel)
+
     return files
 
 
 def build_pcs(folder):
-
     if not os.path.isdir(folder):
-        print("Folder not found")
+        print("Folder not found:", folder)
         return
-
 
     required = [
         "main.py",
         "manifest.json"
     ]
 
-
-    for f in required:
-        if not os.path.exists(os.path.join(folder, f)):
-            print("Missing:", f)
+    for file in required:
+        if not os.path.exists(os.path.join(folder, file)):
+            print("Missing:", file)
             return
 
-    with open(os.path.join(folder, "manifest.json"),"r") as f:
-        manifest = json.load(f)
+    manifest_path = os.path.join(folder, "manifest.json")
 
-    app_name = manifest.get("name", os.path.basename(folder))
+    try:
+        with open(manifest_path, "r") as f:
+            manifest = json.load(f)
+    except json.JSONDecodeError:
+        print("Invalid manifest.json")
+        return
+
+    app_name = manifest.get(
+        "name",
+        os.path.basename(os.path.abspath(folder))
+    )
+
     output = (app_name + ".pcs").lower()
+    output_dir = os.path.join("builds", app_name)
+    output_path = os.path.join(output_dir, output)
+
+    os.makedirs(output_dir, exist_ok=True)
 
     print("Building", app_name)
 
     files = collect_files(folder)
 
-    with open(output, "wb") as out:
+    with open(output_path, "wb") as out:
         out.write(b"PCS1")
-        manifest_data = json.dumps(manifest).encode()
+
+        manifest_data = json.dumps(
+            manifest,
+            separators=(",", ":")
+        ).encode()
+
         out.write(struct.pack("<I", len(manifest_data)))
         out.write(manifest_data)
+
         for file in files:
             path = os.path.join(folder, file)
-            data = open(path, "rb").read()
+
+            with open(path, "rb") as f:
+                data = f.read()
 
             name = file.encode()
+
             out.write(struct.pack("<B", len(name)))
             out.write(name)
             out.write(struct.pack("<I", len(data)))
@@ -74,19 +95,21 @@ def build_pcs(folder):
 
             print(" +", file)
 
-    print("\nCreated:", output)
-    hash_value = sha256_file(output)
-    with open(output + ".sha256", "w") as f:
+    hash_value = sha256_file(output_path)
+    hash_path = output_path + ".sha256"
+
+    with open(hash_path, "w") as f:
         f.write(hash_value)
 
+    print("\nCreated:", output_path)
     print("\nSHA256:")
     print(hash_value)
-
+    print("\nHash saved:", hash_path)
 
 
 if __name__ == "__main__":
-
     if len(sys.argv) < 2:
         print("Usage: build_app.py <folder>")
-    else:
-        build_pcs(sys.argv[1])
+        sys.exit(1)
+
+    build_pcs(sys.argv[1])

@@ -180,6 +180,7 @@ class Apps_manager:
                 return
             install(read)
         else:
+            read = read.removesuffix(".pcs")
             install(read)
 
     def main(self, arg, arg1=None):
