@@ -9,6 +9,7 @@ import time
 import requests
 import json
 import sys
+import platform
 
 def pico_exists(path):
     result = subprocess.run(
@@ -59,6 +60,42 @@ def wait_pico():
         else:
             time.sleep(0.5)
 
+def find_pico():
+    system = platform.system()
+
+    if system == "Windows":
+        result = subprocess.run(
+            [
+                "powershell",
+                "-NoProfile",
+                "-Command",
+                "Get-Volume | Where-Object {$_.FileSystemLabel -in @('RPI-RP2','RP2350','PICO')} | Select-Object -ExpandProperty DriveLetter"
+            ],
+            capture_output=True,
+            text=True
+        )
+
+        lines = result.stdout.strip().splitlines()
+        drive = lines[0].strip() if lines else ""
+
+        if drive:
+            return drive + ":\\"
+
+    elif system == "Linux":
+        for partition in psutil.disk_partitions():
+            print(partition.device, partition.mountpoint)
+            names = [
+                "RPI-RP2",
+                "RP2350",
+                "PICO"
+            ]
+
+            if any(name in partition.mountpoint.upper() for name in names):
+                return partition.mountpoint
+
+    return None
+
+
 def install_micropython():
     print("""
     1. Raspberry Pi Pico/RP2040 
@@ -102,40 +139,17 @@ def install_micropython():
             print("Failed:", r.status_code)
 
 
-
-        def pico_boot_mode():
-            for partition in psutil.disk_partitions():
-                print(partition.device, partition.mountpoint)
-
-                names = [
-                    "RPI-RP2",
-                    "RP2350",
-                    "PICO"
-                ]
-
-                if any(name in partition.mountpoint.upper() for name in names):
-                    return True
-
-            return False
-
         print("Hold boot button and then plug pico into computer")
         while True:
-            if pico_boot_mode():
+            pico = find_pico()
+            if pico:
                 print("Connected!")
+                print(pico)
                 break
 
             time.sleep(0.5)
-            
-        print("Installing micropython into pico")
-        for partition in psutil.disk_partitions():
-            if "RPI-RP2" in partition.device or "RPI-RP2" in partition.mountpoint:
-                print("Found Pico:", partition.mountpoint)
 
-        shutil.copy(
-            "micropython_latest.uf2",
-            partition.mountpoint
-        )
-
+        shutil.copy("micropython_latest.uf2", pico)
         time.sleep(5)
     else:
         print("Installing skiped")
