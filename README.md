@@ -12,11 +12,11 @@ Terminal-based operating system fully written in MicroPython for the Raspberry P
   With this, you can expand your storage, download apps and files from your PC to your Pico, or vice versa. I am very happy that I made this.
 
 * **WiFi connectivity**
-  When you have raspberry pi pico version W the installer and system automaticly detects it and install the wifi drivers and enable the wifi connectivity.
+  When you have a Raspberry Pi Pico W, the installer and system automatically detect it and install the WiFi drivers and enable WiFi connectivity.
 
 * **Apps**
-  The PicoOS have its own app system called `pcs`. You can install apps with 3 methods: Internet, Localy or With Installer.
-  > For now I have build 2 apps "nano" - Text editor, "image" - Image render
+  PicoOS has its own app system called `pcs`. You can install apps with 3 methods: Internet, Locally, or With Installer.
+  > For now I have built 2 apps: "nano" - Text editor, "image" - Image render
 
 * **Similarity with Linux**
   I tried to make it feel very similar to Linux, so some of the commands are the same.
@@ -32,7 +32,7 @@ Terminal-based operating system fully written in MicroPython for the Raspberry P
   If you want to build a robot or anything that should start immediately without user input, this is for you. Trun is enabled by default, but it does nothing until you create a file called `trun.run` containing the path to the Python program you want to run.
 
 * **Installer**
-   So I want to make this OS so much easier to install to I made the External installer.
+   I wanted to make this OS much easier to install, so I made an external installer.
 
 ## Repository layout
 
@@ -41,7 +41,7 @@ PicoOS/
 ├── main.py #because MicroPython automatically runs main.py, I made this file and it just runs the boot process
 ├── installer.py #with this script PicoOS is installed and configured
 ├── requirements.txt #Python dependencies for the installer
-├── manifest.json #verison of each file in this system
+├── manifest.json #version of each file in this system
 ├── kernel/
 │   ├── boot.py #running boot sequences and printing the ASCII logo
 │   ├── system.py #prints all information about the system
@@ -54,21 +54,21 @@ PicoOS/
 ├── system/
 │   ├── apps.py #app runner and installer
 │   ├── make_directory.py #creates basic directories if they don't exist
-    ├── pcs.py #extractor for pcs apps
-    ├── system_update.py #system updater using internet - Install only when W version
+│   ├── pcs.py #extractor for pcs apps
+│   ├── system_update.py #system updater using internet - install only on W version
 │   └── trun.py #automatically runs Python code after boot
 ├── external_tools/
-    ├── build_app.py #this tool from app folder make pcs app and sha256 key
-    ├── extract_app.py #this tool extract pcs and into folder
-    └── pxi_converter.py #this convert image into ".pxi" image file
+│   ├── build_app.py #this tool builds a pcs app and sha256 key from the app folder
+│   ├── extract_app.py #this tool extracts pcs into a folder
+│   └── pxi_converter.py #this converts an image into a ".pxi" image file
 ├── drivers/
 │   ├── led.py #light debugging
 │   ├── sdcard_driver.py #SD card driver built on the SD card library
 │   ├── sdcard.py #library for SD cards
-    └── wifi.py #the WiFi tools use network libary - Install only when W version
+│   └── wifi.py #the WiFi tools use the network library - install only on W version
 └── apps/
     ├── image.pcs #app for image rendering
-    └── nano.pcs #text editor similiar to original Linux nano editor
+    └── nano.pcs #text editor similar to the original Linux nano editor
 ```
 > **The SD card driver used in PicoOS is based on the MicroPython SD card library:** https://github.com/micropython/micropython-lib/blob/master/micropython/drivers/storage/sdcard/sdcard.py
 ## Installation
@@ -105,7 +105,7 @@ PicoOS/
 
 5. Follow the prompts.
 
-> **Note:** On Linux, I recomend to use `sudo`
+> **Note:** On Linux, I recommend using `sudo`.
 
 ### What does the installer do?
 
@@ -121,9 +121,10 @@ I tried to make the installation as simple as possible. The installer does the f
   You do not need to manually edit configuration files. The installer lets you select things like the light source, SD card pins, and whether you want to enable or disable debugging tools.
 
 * **Installing apps**
-  You can install apps externalyusing the installer
+  You can install apps externally using the installer.
+
 * **Serial monitor**
-  This reboot the system and connect to device using serial
+  This reboots the system and connects to the device using serial.
 
 ### Installer commands
 
@@ -136,7 +137,7 @@ I added a few command-line options that you can use:
   If you only want to connect to the serial monitor, this option reboots the Pico and then connects to it.
 
 * **`--apps`**
-  Install apps externaly
+  Install apps externally.
 
 ## Built-in commands
 
@@ -150,7 +151,7 @@ Most of the commands are very similar to Linux.
 | `cd <folder>`       | Change directory. `cd /` goes to the home directory and `cd ..` goes one directory back. |
 | `python <file>`     | Run a Python file                                                                        |
 | `mkdir <folder>`    | Create a folder                                                                          |
-| `pwd`               | show in what path you are                                                                |
+| `pwd`               | Show what path you are in                                                                |
 | `touch <file>`      | Create a file                                                                            |
 | `ls`                | List files and folders                                                                   |
 | `rm <folder/file>`  | Delete a file or folder                                                                  |
@@ -163,9 +164,9 @@ Most of the commands are very similar to Linux.
 | `enable <service>`  | Enable a service                                                                         |
 | `sysinfo`           | Print system information                                                                 |
 | `<app>`             | Run an installed app                                                                     |
-| `wifi <command>`    | Comands are: `connect`, `status`, `disconnect` -- avible only for W version              |
-| `ping`              | Ping the website or IP adress -- avible only for W version                               |
-| `update`             | For update the system -- avible only for W version                                      |
+| `wifi <command>`    | Commands are: `connect`, `status`, `disconnect` -- available only on the W version       |
+| `ping`              | Ping the website or IP address -- available only on the W version                        |
+| `update`             | Update the system -- available only on the W version                                    |
 
 ## Configuration
 
@@ -177,13 +178,13 @@ PicoOS has a directory called `conf`, which contains the configuration files.
 | `apps.conf`          | App information (name, version, author) |
 | `sd_card.conf`       | SD card pin configuration               |
 | `debug_light.conf`   | Light type and pin                      |
-| `wifi.conf`          | WiFi informations                       |
+| `wifi.conf`          | WiFi information                        |
 
 ## How to make your own app
 
 Apps are written in MicroPython.
 
-The apps should be named `"main.py"` and have definition main and this is what app runner is running. Also you need the manifest.json and this should be formated like this:
+The app's main file should be named `"main.py"` and have a `main` definition, which is what the app runner executes. You also need a `manifest.json`, formatted like this:
 ```
 {
   "name": "name of the app",
@@ -191,15 +192,12 @@ The apps should be named `"main.py"` and have definition main and this is what a
   "author": "author of the app"
 }
 ``` 
-Then you can use external tool `"build_app.py"` and this convert your folder app to pcs app. 
-This is how to use it ```python build_app.py <folder_path>``` and after this you get in external_apps/build/app_name/ and there you get your pcs file and hash of it.
+Then you can use the external tool `"build_app.py"` to convert your app folder into a pcs app.
+Usage: ```python build_app.py <folder_path>```. After this, you'll find your pcs file and its hash in `external_apps/build/app_name/`.
 
 ## Plans for the future
 
 This is the beta version of PicoOS, and it only contains some of the features I want to add.
-
-* **Wi-Fi driver**
-  I finally got a Raspberry Pi Pico W, and I want to create an external Wi-Fi driver built on top of the built-in MicroPython driver. I also want to make it reusable for other projects.
 
 * **Wi-Fi communication**
   I want to create something similar to SSH, but simpler and designed specifically for this OS. I plan to write the PC-side application in Rust.
@@ -207,11 +205,8 @@ This is the beta version of PicoOS, and it only contains some of the features I 
 * **Internet browser**
   If I manage to finish the Wi-Fi driver, I want to create a simple web browser so you can browse the internet and do other things.
 
-* **Downloading packages and system updates over the internet**
-  One thing I don't like is having to copy files from my PC to the Pico using an SD card. Because of that, I want to create my own server for system updates and applications. This would allow anyone to upload their own apps and download updates directly from PicoOS.
-
-* **Image rendering**
-  This may sound like a crazy idea, but I want to create something that can render regular image formats into colored ASCII art so they can be displayed inside the terminal. This could even make it possible to view images from the internet, play videos (which are just lots of images in sequence), or maybe even run simple games like DOOM.
+* **Public app system**
+  For now, the apps you download externally are made by me, but I want to open this whole system up to other authors.
 
 ## Why I made this
-I got the idea for this project one day when I wanted to try installing Linux on the RP2040, but hey, it's not possible because of the small amount of RAM and flash memory. So I said to myself, "Why not make my own OS for the Raspberry Pi Pico?" And that's how the project started.
+I got the idea for this project one day when I wanted to try installing Linux on the RP2040, but that's not possible because of the small amount of RAM and flash memory. So I said to myself, "Why not make my own OS for the Raspberry Pi Pico?" And that's how the project started.
