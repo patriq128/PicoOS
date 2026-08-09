@@ -290,7 +290,7 @@ def apps():
         a += 1
         app_name = app.removesuffix(".pcs")
         apps.append(app_name)
-        print(f"{a}. [ ] {app_name} - {data[app]['description']}")
+        print(f"{a}. [ ] {app_name} - {data[app]['description']} - {data[app]['author']}")
 
     choices = input("Select apps (numbers separated by space): ")
 
