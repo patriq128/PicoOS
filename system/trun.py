@@ -14,6 +14,8 @@ def trun():
             run = f.read()
             try:
                 python(run)
+            except KeyboardInterrupt:
+                print("program stoped")
             except Exception as e:
                 print("Opening termianl...")
                 load_output("false", "Trun", "necesery", "Something went wrong while running it")

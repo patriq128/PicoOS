@@ -1,10 +1,12 @@
 {
     "main.py": "d2fcfe245fcbf11e1b1df901a1403d0b8fe8a5e58a8290f9fe62fab1743ee927",
-    "system/trun.py": "7898f8b377b5a9117fb7bb0b809fac4609a6df4b2f0af1ae194d689a306b0bab",
+    "system/trun.py": "e0768ddfb46a6d781a99541d05fd88c20bdddd95a10578c50fccdec9d0fc53bf",
     "system/make_directory.py": "5df54379d9ac206707b81b0152c55ab0a833eb6c6576803965cd54bed995266d",
-    "system/apps.py": "6234673bfbae076c37fe7e22b828c9b0928e3019b9cbd730c931f3fa1410290f",
+    "system/apps.py": "311a58491b9a1777da8c5e39633b5d266d4316b8912c5cfb0df6352e84aaad9d",
     "system/pcs.py": "98604479bf341dca08532524bd479fbed45b5b550acce4314ddb9eabd440ccfd",
     "system/system_update.py": "cac253a44764c1cdab0e1f15b0d29d47c8d2e343598c22d78fdeca07ea1fd945",
+    "apps/nano.pcs": "e8cc35f32b2b859bbd47c033bb5d53666325b23df858bf6c04907616cad2b094",
+    "apps/image.pcs": "ffc209257885ab3c625b8875ff7ab3a71a891c52667510fde8eaf6f650175fa4",
     "drivers/wifi.py": "46a72f353f5ec3f562baaa48c4baee530ad4cf2025fb1453f4d7366b456444f7",
     "drivers/sdcard.py": "55cac2610064374d2d4feb219727b26ad0117797dc3b62b5ca1d2f8977fdebe8",
     "drivers/led.py": "51c5ad35c479ad83a965281d736eee31c3df5275cce4cc37c52bcf20ab705f6d",
@@ -15,5 +17,5 @@
     "kernel/system.py": "94aa71d8bf825b8ed708c5ee4da20006ea314a4b7af8ccca19e6ff6863e6d228",
     "kernel/config.py": "10467814733d2b33242223407c494a539c0452680a078453294c549315f778bd",
     "shell/commands.py": "fe08ffcfcbd3718d07cfaf876006d81617c33e757d89885597ade26de5cd1887",
-    "shell/terminal.py": "bf97b889b6c80386322d5b9c451d41417bad1bb3aa82d11fb10d8ea8f47a5fad"
+    "shell/terminal.py": "61b43e44ea8a76cdc0a5f1bd90075109b725c1e3f3118f30a4515a351ba89a63"
 }
