@@ -1,5 +1,5 @@
 import os
-import machine
+import machine #type: ignore
 from kernel.colors import colors
 from kernel.debug import debug, load_output
 
@@ -10,7 +10,7 @@ def echo(*args):
 def hello():
     print("Hello, world!")
         
-def clean():
+def clear():
     print("\033[2J\033[H", end="")
         
 def exit():
@@ -57,17 +57,22 @@ def ls(arg=None):
                 print(item)
 
 def rm(path):
-    if path in os.listdir(): 
-        if os.stat(path)[0] & 0x4000:  
-            for f in os.listdir(path):
-                os.remove(path + "/" + f)
-            os.rmdir(path)
-            print("folder deleted:", path)
-        else:
-            os.remove(path)
-            print("file deleted:", path)
-    else:
+    try:
+        stat = os.stat(path)
+    except OSError:
         colors.red("File not found")
+
+    if stat[0] & 0x4000:
+        for item in os.listdir(path):
+            item_path = path + "/" + item
+            rm(item_path)
+
+        os.rmdir(path)
+        print("folder deleted", path)
+
+    else:
+        os.remove(path)
+        print("file deleted", path)
 
 def cat(filename):
     with open(filename, "r") as f:
@@ -89,7 +94,3 @@ def cp(src, dst):
 def mv(src, dst):
     cp(src, dst)
     os.remove(src)
-
-def restart():
-    from kernel.boot import main
-    main()

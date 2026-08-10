@@ -146,7 +146,7 @@ Most of the commands are very similar to Linux.
 | Command             | What it does                                                                             |
 | ------------------- | ---------------------------------------------------------------------------------------- |
 | `echo <text>`       | Print text                                                                               |
-| `clean`             | Clear the display                                                                        |
+| `clear`             | Clear the display                                                                        |
 | `exit`              | Exit the OS (soft reboot)                                                                |
 | `cd <folder>`       | Change directory. `cd /` goes to the home directory and `cd ..` goes one directory back. |
 | `python <file>`     | Run a Python file                                                                        |
