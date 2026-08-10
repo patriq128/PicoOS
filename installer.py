@@ -280,7 +280,21 @@ def apps():
     print("Download apps:")
     manifest = requests.get("https://picoos.dev/download/apps/manifest.json")
     data = manifest.json()
-    print("Available apps:")
+    result = subprocess.run(
+        [
+            "mpremote",
+            "exec",
+            "from system.apps import apps_manager; apps_manager.main('list')"
+        ],
+        capture_output=True,
+        text=True
+    )
+
+    apps_pico = [
+        app.strip()
+        for app in result.stdout.splitlines()[1:]
+        if app.strip()
+    ]
 
     apps = []
     selected = []
@@ -290,7 +304,10 @@ def apps():
         a += 1
         app_name = app.removesuffix(".pcs")
         apps.append(app_name)
-        print(f"{a}. [ ] {app_name} - {data[app]['description']} - {data[app]['author']}")
+        if app_name in apps_pico:
+            print(f"{a}. {app_name} - [✓] Already installed")
+        else:
+            print(f"{a}. [ ] {app_name} - {data[app]['description']} - {data[app]['author']}")
 
     choices = input("Select apps (numbers separated by space): ")
 

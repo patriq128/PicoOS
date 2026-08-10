@@ -2,7 +2,7 @@ import os
 import sys
 from system.apps import apps
 from kernel.colors import colors
-from shell.commands import echo, hello, clear, exit, cd, python, mkdir, ls, rm, cat, touch, mv, python, pwd
+from shell.commands import echo, hello, clean, exit, cd, python, mkdir, ls, rm, cat, touch, mv, python, pwd
 from drivers.sdcard_driver import mount, unmount
 from kernel.config import enable, disable
 from system.apps import apps_manager
@@ -21,7 +21,7 @@ def command_list():
         return {
             "echo": echo,
             "hello": hello,
-            "clean": clear,
+            "clear": clean,
             "exit": exit,
             "cd": cd,
             "python": python,
@@ -47,7 +47,7 @@ def command_list():
         return {
             "echo": echo,
             "hello": hello,
-            "clean": clear,
+            "clear": clean,
             "exit": exit,
             "cd": cd,
             "python": python,

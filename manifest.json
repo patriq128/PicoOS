@@ -2,7 +2,7 @@
     "main.py": "d2fcfe245fcbf11e1b1df901a1403d0b8fe8a5e58a8290f9fe62fab1743ee927",
     "system/trun.py": "e0768ddfb46a6d781a99541d05fd88c20bdddd95a10578c50fccdec9d0fc53bf",
     "system/make_directory.py": "5df54379d9ac206707b81b0152c55ab0a833eb6c6576803965cd54bed995266d",
-    "system/apps.py": "311a58491b9a1777da8c5e39633b5d266d4316b8912c5cfb0df6352e84aaad9d",
+    "system/apps.py": "5838718323911a951bb2f156fdbde17d68ce51452dcd2c4d8f5aa167c0709227",
     "system/pcs.py": "98604479bf341dca08532524bd479fbed45b5b550acce4314ddb9eabd440ccfd",
     "system/system_update.py": "cac253a44764c1cdab0e1f15b0d29d47c8d2e343598c22d78fdeca07ea1fd945",
     "apps/nano.pcs": "e8cc35f32b2b859bbd47c033bb5d53666325b23df858bf6c04907616cad2b094",
@@ -16,6 +16,6 @@
     "kernel/colors.py": "450aa1b7f37407257c2b11fc986cf2d44bd372df948b47b56fa28b58162140bb",
     "kernel/system.py": "94aa71d8bf825b8ed708c5ee4da20006ea314a4b7af8ccca19e6ff6863e6d228",
     "kernel/config.py": "10467814733d2b33242223407c494a539c0452680a078453294c549315f778bd",
-    "shell/commands.py": "6175cddde52df6e5cf84c6dce87aab5b77b34470e03876700bfe75fbf28f2be9",
-    "shell/terminal.py": "311c100f840bde2e60b0b702e14e03bb6c88865b89a42c4628da7db9bd3c6401"
+    "shell/commands.py": "155a9c648bd67daacdbb88d8be389b1495aad4e3199a9f4a984934cbe8b3b992",
+    "shell/terminal.py": "4b438b40cfa86a42e471cc6172699b61ecbd3489c3f33dfb5fd5ed7cede7f409"
 }

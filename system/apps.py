@@ -45,12 +45,14 @@ class Apps:
             debug.error("Saving apps config failed", str(e))
 
     def run(self, app, args=None):
-
         if args is None:
             args = []
         elif not isinstance(args, (list, tuple)):
             args = [args]
+
+        cwd = os.getcwd()
         try:
+            os.chdir("/")
             module_name = "apps." + app + ".main"
             mod = __import__(module_name)
             for part in module_name.split(".")[1:]:
@@ -59,6 +61,9 @@ class Apps:
             print("Error loading app:", e)
             debug.error("Error loading app", str(e))
             return
+        finally:
+            os.chdir(cwd)
+
         try:
             mod.main(*args)
         except Exception as e:

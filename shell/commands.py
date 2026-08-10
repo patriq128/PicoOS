@@ -10,7 +10,7 @@ def echo(*args):
 def hello():
     print("Hello, world!")
         
-def clear():
+def clean():
     print("\033[2J\033[H", end="")
         
 def exit():
