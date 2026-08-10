@@ -168,6 +168,25 @@ Most of the commands are very similar to Linux.
 | `ping`              | Ping the website or IP address -- available only on the W version                        |
 | `update`             | Update the system -- available only on the W version                                    |
 
+## Hardware Configuration
+
+One of the features of PicoOS is support for external hardware connectivity.
+
+You can configure your hardware during installation or later through configuration files.
+
+### Default Hardware Configuration
+
+The following configuration is used by default for supported hardware.
+
+#### SD Card
+
+| SD Card Pin | GPIO Pin |
+| ----------- | -------- |
+| CS          | 5        |
+| MOSI        | 3        |
+| SCK         | 2        |
+| MISO        | 4        |
+
 ## Configuration
 
 PicoOS has a directory called `conf`, which contains the configuration files.
@@ -207,6 +226,9 @@ This is the beta version of PicoOS, and it only contains some of the features I 
 
 * **Public app system**
   For now, the apps you download externally are made by me, but I want to open this whole system up to other authors.
+
+* **Ethernet module**
+  PicoOS supports external Ethernet modules, allowing you to connect to the Internet without requiring a Pico W.
 
 ## Why I made this
 I got the idea for this project one day when I wanted to try installing Linux on the RP2040, but that's not possible because of the small amount of RAM and flash memory. So I said to myself, "Why not make my own OS for the Raspberry Pi Pico?" And that's how the project started.
