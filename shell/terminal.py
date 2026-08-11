@@ -85,11 +85,10 @@ def terminal():
                         apps.run(name, argument)
                     except Exception:
                         colors.red("Command " + name + " not found.")
+
             except Exception as e:
-                print("Error:", e)
+                debug.error("Command Crash", str(e))
+                break
+
         except KeyboardInterrupt:
             print("^C")
-            continue
-        except Exception as e:
-            debug.error("Termianl Crash", str(e))
-            continue
