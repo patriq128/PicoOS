@@ -92,3 +92,4 @@ def terminal():
 
         except KeyboardInterrupt:
             print("^C")
+            break
