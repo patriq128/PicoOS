@@ -70,26 +70,21 @@ def command_list():
 def terminal():
     commands = command_list()
     while True:
+        command = input("\033[0m" + os.getcwd() + "\033[32m >> \033[0m")
+        part = command.split()
+        if not part:
+            continue
+        name = part[0]
+        argument = part[1:]
         try:
-            command = input("\033[0m" + os.getcwd() + "\033[32m >> \033[0m")
-            part = command.split()
-            if not part:
-                continue
-            name = part[0]
-            argument = part[1:]
-            try:
-                if name in commands:
-                    commands[name](*argument)
-                else:
-                    try:
-                        apps.run(name, argument)
-                    except Exception:
-                        colors.red("Command " + name + " not found.")
+            if name in commands:
+                commands[name](*argument)
+            else:
+                try:
+                    apps.run(name, argument)
+                except Exception:
+                    colors.red("Command " + name + " not found.")
 
-            except Exception as e:
-                debug.error("Command Crash", str(e))
-                break
-
-        except KeyboardInterrupt:
-            print("^C")
-            break
+        except Exception as e:
+            debug.error("Command Crash", str(e))
+            continue

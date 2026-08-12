@@ -1,9 +1,8 @@
-import machine
+import machine #type: ignore
 import json
 import os
 
 from kernel.colors import colors
-from kernel.debug import load_output
 
 # ---- SD Card ----
 class Sd_card():
@@ -47,14 +46,12 @@ class Sd_card():
             try:
                 sd = self.inicializing()
                 os.mount(sd, "/sd")
-                load_output("ok", "SD_card", "necesery", "SD Card is mounted")
-                return True
+                return "mount"
 
             except:
-                load_output("false", "SD_card", "necesery", "Fail to mount SD Card")
-                return False
-        else:
-            load_output("false", "SD_card", "not necesery", "sd_card.conf not exist")
+                return "fail"
+        else:           
+            return "notexist"
 sd_card = Sd_card()
 
 def mount(arg):

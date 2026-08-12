@@ -1,15 +1,18 @@
-# FIXME:
-# - Repair the sd card shit
-
 from kernel.config import conf, enable
+import os
 
 # This is Debugging function and it can save the error messages
 class Debugging:
 
     def save(self, data):
-        from drivers.sdcard_driver import sd_card
-        sd_status = sd_card.test()
-        if sd_status:
+        def sd():
+            try:
+                os.stat("/sd")
+                return True
+            except OSError:
+                return False
+        
+        if sd():
             path = "/sd/errors.txt"
         else:
             path = "/errors.txt"
