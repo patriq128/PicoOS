@@ -56,23 +56,36 @@ def ls(arg=None):
             if not item == "main.py":
                 print(item)
 
-def rm(path):
-    try:
-        stat = os.stat(path)
-    except OSError:
-        colors.red("File not found")
+def rm(path, argument=None):
+    do = True
+    if path == "/" and argument != "--no-preserve-root":
+        print("""rm: refusing to remove '/'.
+rm: use --no-preserve-root to override this protection.""")
+        do = False
+    if argument == "--no-preserve-root":
+        colors.red(f"WARNING: This will permanently delete '{path}'.")
+        if input("Continue ? [y/N] >>") == "y":
+            do = True
+        else:
+            do = False
 
-    if stat[0] & 0x4000:
-        for item in os.listdir(path):
-            item_path = path + "/" + item
-            rm(item_path)
+    if do:
+        try:
+            stat = os.stat(path)
+        except OSError:
+            colors.red("File not found")
 
-        os.rmdir(path)
-        print("folder deleted", path)
+        if stat[0] & 0x4000:
+            for item in os.listdir(path):
+                item_path = path + "/" + item
+                rm(item_path)
 
-    else:
-        os.remove(path)
-        print("file deleted", path)
+            os.rmdir(path)
+            print("folder deleted", path)
+
+        else:
+            os.remove(path)
+            print("file deleted", path)
 
 def cat(filename):
     with open(filename, "r") as f:
