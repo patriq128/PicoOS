@@ -58,5 +58,7 @@ def main():
     trun()
     debugging_light("on")
     print("Login")
-    userman.login()
+    while True:
+        if userman.login():
+            break
     terminal()

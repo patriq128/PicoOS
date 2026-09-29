@@ -129,7 +129,8 @@ class UserMan:
         try:
             with open("/conf/users", "r") as f:
                 loaded = json.load(f)
-        except:
+        except Exception as e:
+            print(e)
             open("/conf/users", "w").close()
             loaded = {}
 
@@ -150,7 +151,10 @@ class UserMan:
             json.dump(loaded, f)
 
     def new(self, name, password=None):
-        os.mkdir(f"/home/{name}")
+        try:
+            os.mkdir(f"/home/{name}")
+        except:
+            print(f"Folder '{name}' already exists")
 
         if password is None:
             password = input("New password >> ")
@@ -179,9 +183,17 @@ class UserMan:
         if self.check_password(name, password):
             print("Login successful!")
             user = name
-            os.chdir(f"/home/{user}")
+            try:
+                os.chdir(f"/home/{user}")
+            except:
+                os.mkdir(f"/home/{name}")
+                os.chdir(f"/home/{user}")
+
+            return True
+
         else:
             print("Wrong password!")
+            return False
 
     def get(self):
         return user

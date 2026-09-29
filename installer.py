@@ -1,6 +1,3 @@
-#TODO
-# - Finish the apps installing
-
 import subprocess
 import os
 import shutil
@@ -10,6 +7,7 @@ import requests
 import json
 import sys
 import platform
+import hashlib
 
 def pico_exists(path):
     result = subprocess.run(
@@ -273,14 +271,21 @@ def conf():
         with open("conf/configuration.conf", "w") as f:
             json.dump(data, f)
 
-    if os.path.exists("conf"): #type: ignore
-        copy("conf")
-
     print("Lets set yoour first user")
     username = input("Username: ")
     password = input("Password: ")
-    subprocess.run(["mpremote", "exec", f"from shell.commands import userman; userman.new({username!r}, {password!r})"])
+    password_hash = hashlib.sha256(password.encode()).digest().hex()
+    home = f"/home/{username}"
+    data = {username: {
+            "password": password_hash,
+            "home": home
+        }}
+    with open("conf/users", "w") as f:
+        json.dump(data, f)
     print("Dont forgot your name and password :)")
+
+    if os.path.exists("conf"): #type: ignore
+        copy("conf")
 
 def apps():
     print("Download apps:")
