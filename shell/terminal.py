@@ -2,7 +2,7 @@ import os
 import sys
 from system.apps import apps
 from kernel.colors import colors
-from shell.commands import echo, hello, clean, exit, cd, python, mkdir, ls, rm, cat, touch, mv, python, pwd
+from shell.commands import echo, hello, clean, exit, cd, python, mkdir, ls, rm, cat, touch, mv, python, pwd, userman
 from drivers.sdcard_driver import mount, unmount
 from kernel.config import enable, disable
 from system.apps import apps_manager
@@ -42,6 +42,7 @@ def command_list():
             "ping": ping,
             "app": apps_manager.main,
             "update": update,
+            "userman": userman
         }
     else:
         return {
@@ -64,13 +65,23 @@ def command_list():
             "enable": enable,
             "sysinfo": system,
             "run": python,
-            "app": apps_manager.main
+            "app": apps_manager.main,
+            "userman": userman
         }
 
 def terminal():
     commands = command_list()
     while True:
-        command = input("\033[0m" + os.getcwd() + "\033[32m >> \033[0m")
+        path = os.getcwd()
+        home = f"/home/{userman.get()}"
+
+        if path == home:
+            path = "~"
+        elif path.startswith(home + "/"):
+            path = "~" + path[len(home):]
+            
+        text = "\033[32m" + userman.get() + "@PicoOS" + "\033[0m:" + "\033[34m" + path + "\033[0m$ "
+        command = input(text)
         part = command.split()
         if not part:
             continue

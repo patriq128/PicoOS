@@ -276,6 +276,12 @@ def conf():
     if os.path.exists("conf"): #type: ignore
         copy("conf")
 
+    print("Lets set yoour first user")
+    username = input("Username: ")
+    password = input("Password: ")
+    subprocess.run(["mpremote", "exec", f"from shell.commands import userman; userman.new({username!r}, {password!r})"])
+    print("Dont forgot your name and password :)")
+
 def apps():
     print("Download apps:")
     manifest = requests.get("https://picoos.dev/download/apps/manifest.json")

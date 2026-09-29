@@ -2,6 +2,8 @@ import os
 import machine #type: ignore
 from kernel.colors import colors
 from kernel.debug import debug, load_output
+import hashlib
+import json
 
 # ---- Build In Commands ----
 def echo(*args):
@@ -18,14 +20,14 @@ def exit():
     machine.reset()
        
 def cd(arg=None):
-    if arg == "/" or not arg:
+    if not arg:
+        os.chdir(f"/home/{userman.get()}")
+    if arg == "/":
         os.chdir("/")
     elif arg == "..":
         os.chdir("..")
     elif arg in os.listdir():
         os.chdir(arg)
-    else:
-        colors.red("Path not found")
        
 def python(arg):
     if arg in os.listdir():
@@ -107,3 +109,81 @@ def cp(src, dst):
 def mv(src, dst):
     cp(src, dst)
     os.remove(src)
+
+# User manager
+class UserMan:
+
+    def __init__(self):
+        try:
+            os.mkdir("/home")
+        except OSError:
+            pass
+
+    def __call__(self, do, *items):
+        if do == "new":
+            self.new(*items)
+        elif do == "login":
+            self.login()
+
+    def load(self):
+        try:
+            with open("/conf/users", "r") as f:
+                loaded = json.load(f)
+        except:
+            open("/conf/users", "w").close()
+            loaded = {}
+
+        return loaded
+
+    def save(self, name, password):
+        loaded = self.load()
+
+        password_hash = hashlib.sha256(password.encode()).digest().hex()
+        home = f"/home/{name}"
+
+        loaded[name] = {
+            "password": password_hash,
+            "home": home
+        }
+
+        with open("/conf/users", "w") as f:
+            json.dump(loaded, f)
+
+    def new(self, name, password=None):
+        os.mkdir(f"/home/{name}")
+
+        if password is None:
+            password = input("New password >> ")
+
+        try:
+            self.save(name, password)
+            print(f"Created user: {name}")
+        except Exception as e:
+            colors.red("something went wrong")
+            print(e)
+
+    def check_password(self, name, password):
+        users = self.load()
+
+        if name not in users:
+            return False
+
+        password_hash = hashlib.sha256(password.encode()).digest().hex()
+
+        return password_hash == users[name]["password"]
+
+    def login(self):
+        global user
+        name = input("Username: ")
+        password = input("Password: ")
+        if self.check_password(name, password):
+            print("Login successful!")
+            user = name
+            os.chdir(f"/home/{user}")
+        else:
+            print("Wrong password!")
+
+    def get(self):
+        return user
+
+userman = UserMan()

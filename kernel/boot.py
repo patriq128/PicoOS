@@ -4,7 +4,7 @@ from drivers.sdcard_driver import sd_card
 from shell.terminal import terminal
 from drivers.led import debugging_light
 from system.trun import trun
-from shell.commands import clean
+from shell.commands import clean, userman
 from system.make_directory import make_basic_directory
 from kernel.system import system
 from kernel.debug import load_output
@@ -57,4 +57,6 @@ def main():
     debugging_light("off")
     trun()
     debugging_light("on")
+    print("Login")
+    userman.login()
     terminal()

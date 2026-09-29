@@ -10,12 +10,14 @@
     "drivers/wifi.py": "46a72f353f5ec3f562baaa48c4baee530ad4cf2025fb1453f4d7366b456444f7",
     "drivers/sdcard.py": "55cac2610064374d2d4feb219727b26ad0117797dc3b62b5ca1d2f8977fdebe8",
     "drivers/led.py": "51c5ad35c479ad83a965281d736eee31c3df5275cce4cc37c52bcf20ab705f6d",
-    "drivers/sdcard_driver.py": "2eb7750b41c246ff3786fc40d80e1771d78f66ef8fc3accc93c5e381c77e16a0",
-    "kernel/boot.py": "4a0614bf18e2b27389b20d71921d67678d2231991f3885129a403a2e17e626af",
-    "kernel/debug.py": "7751267318c364b2328ae7f2caee056b4973acc70e371e544ca9a765e58faa7a",
+    "drivers/sdcard_driver.py": "5637a8956a832d4953d0f93ba17f2131de452aa8f4d6e4779b907c922ca2d89e",
+    "drivers/__pycache__/sdcard_driver.cpython-312.pyc": "bbc2ec787d4c9c1cc7dc8ee425d2d96a1c78b2d992feb16cb35c4062c6af09a2",
+    "kernel/boot.py": "c6ad90b8f1fd5134686e0b39ed40fa5f07da6a404950420e626f293ca77da612",
+    "kernel/debug.py": "b220e842cf5f55bd2fb510aabb168c5f45407446063c5f11edab482fdcc3194e",
     "kernel/colors.py": "450aa1b7f37407257c2b11fc986cf2d44bd372df948b47b56fa28b58162140bb",
     "kernel/system.py": "94aa71d8bf825b8ed708c5ee4da20006ea314a4b7af8ccca19e6ff6863e6d228",
     "kernel/config.py": "10467814733d2b33242223407c494a539c0452680a078453294c549315f778bd",
-    "shell/commands.py": "155a9c648bd67daacdbb88d8be389b1495aad4e3199a9f4a984934cbe8b3b992",
-    "shell/terminal.py": "4b438b40cfa86a42e471cc6172699b61ecbd3489c3f33dfb5fd5ed7cede7f409"
+    "kernel/__pycache__/boot.cpython-312.pyc": "966c320f80a943830540033b00ee214383e8c55ef89b78fb00b5bdeb9689913c",
+    "shell/commands.py": "804e258f3d2d3719d3183b2431df511622c4c18f6e7defb0a056be8fb4979723",
+    "shell/terminal.py": "ac5773819ad28767091033776d183afda4ca8c470d9ad204db40cb8641704559"
 }
